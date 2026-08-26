@@ -312,7 +312,7 @@ p { margin: 0 0 1em; }
 
 /* Empty state */
 .empty-state { text-align: center; padding: 4rem 1rem; color: var(--ink-soft); }
-.empty-state h3 { color: var(--ink); }
+.empty-state h3 { color: var(--text); }
 
 /* Forms */
 .input {
