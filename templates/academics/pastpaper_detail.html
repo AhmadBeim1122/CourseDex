@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load academics_extras %}
+{% block breadcrumbs %}
+<div class="breadcrumbs"><div class="wrap">
+  <a href="{% url 'core:home' %}">Home</a><span class="sep">/</span>
+  <a href="{% url 'academics:pastpaper_program_list' %}">Past Papers</a><span class="sep">/</span>
+  <a href="{{ program.get_past_papers_url }}">{{ program.short_name }}</a><span class="sep">/</span>
+  <a href="{{ semester.get_past_papers_url }}">{{ semester.display_name }}</a><span class="sep">/</span>
+  <a href="{{ subject.get_past_papers_url }}">{{ subject.name }}</a><span class="sep">/</span>
+  <span class="current">{{ year }}</span>
+</div></div>
+{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="wrap" style="max-width:780px;">
+    <span class="eyebrow">{{ program.short_name }} · {{ semester.display_name }}</span>
+    <h1>{{ subject.name }} — {{ year }}</h1>
+
+    {% for paper in papers %}
+    <div class="card paper-card">
+      <div class="top">
+        <h3 style="margin:0;">{{ paper.get_exam_type_display }}</h3>
+        {% if paper.has_solution %}
+          <span class="tag tag-solved">Solved</span>
+        {% else %}
+          <span class="tag tag-unsolved">Question only</span>
+        {% endif %}
+      </div>
+
+      <a href="{{ paper.paper_drive_link }}" target="_blank" rel="noopener" class="btn btn-teal btn-sm">Open question paper ↗</a>
+
+      {% if paper.paper_drive_link %}
+        {% if paper.paper_drive_link|is_pdf_link %}
+        <div class="paper-preview paper-preview-pdf">
+          <iframe src="{{ paper.paper_drive_link|drive_preview_url }}" loading="lazy" allow="autoplay" title="Question paper preview"></iframe>
+        </div>
+        {% else %}
+        <div class="paper-preview">
+          <a href="{{ paper.paper_drive_link }}" target="_blank" rel="noopener">
+            <img src="{{ paper.paper_drive_link|drive_image_url }}" alt="{{ subject.name }} {{ year }} question paper" loading="lazy">
+          </a>
+        </div>
+        {% endif %}
+      {% endif %}
+
+      {% if paper.solution_type == 'text' and paper.solution_text %}
+        <div class="solution-block">
+          <strong>Solution</strong>
+          <div class="topic-body" style="margin-top:.6rem;">{{ paper.linked_solution_html|safe }}</div>
+        </div>
+      {% elif paper.solution_type == 'image' %}
+        <div class="solution-block">
+          <strong>Solution</strong>
+          <div style="margin-top:.6rem;">
+            {% if paper.solution_drive_link %}
+              <a href="{{ paper.solution_drive_link }}" target="_blank" rel="noopener" class="btn btn-outline btn-sm">Open solution images ↗</a>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if paper.solution_drive_link and paper.solution_type == 'text' %}
+      <div class="solution-drive-cta">
+        <a href="{{ paper.solution_drive_link }}" target="_blank" rel="noopener" class="btn btn-outline btn-sm">📂 Open full solution on Drive ↗</a>
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+
+    <div class="ad-slot">
+      <div class="ad-label">Advertisement</div>
+      {% if ADSENSE_CLIENT_ID %}
+      <ins class="adsbygoogle" style="display:block" data-ad-client="{{ ADSENSE_CLIENT_ID }}" data-ad-slot="" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      {% endif %}
+    </div>
+
+        <a href="{{ subject.get_past_papers_url }}" class="btn btn-outline btn-sm">← All years for {{ subject.name }}</a>
+
+    {% if outline_topics %}
+    <div class="pastpaper-outline-section">
+      <h3>{{ subject.name }} — Topic Outline</h3>
+      <ol class="toc-list">
+        {% for topic in outline_topics %}
+        <li class="toc-block">
+          <div class="toc-item">
+            <span class="toc-num">{{ forloop.counter|stringformat:"02d" }}</span>
+            <a href="{{ topic.get_absolute_url }}" class="toc-title">{{ topic.title }}</a>
+            <span class="toc-fill"></span>
+          </div>
+          {% if topic.subtopics.all %}
+          <ul class="subtopic-list">
+            {% for sub in topic.subtopics.all %}
+            <li><a href="{{ sub.get_absolute_url }}">{{ sub.title }}</a></li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

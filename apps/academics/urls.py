@@ -1,0 +1,60 @@
+from django.urls import path
+
+from . import views
+
+app_name = "academics"
+
+urlpatterns = [
+    # Courses / study material
+    path("courses/", views.program_list, name="program_list"),
+    path("courses/<slug:program_slug>/", views.semester_list, name="semester_list"),
+    path(
+        "courses/<slug:program_slug>/<int:semester_number>/",
+        views.subject_list,
+        name="subject_list",
+    ),
+    path(
+        "courses/<slug:program_slug>/<int:semester_number>/<slug:subject_slug>/",
+        views.topic_list,
+        name="topic_list",
+    ),
+    path(
+        "courses/<slug:program_slug>/<int:semester_number>/<slug:subject_slug>/<slug:topic_slug>/",
+        views.topic_detail,
+        name="topic_detail",
+    ),
+    path(
+        "courses/<slug:program_slug>/<int:semester_number>/<slug:subject_slug>/<slug:topic_slug>/<slug:subtopic_slug>/",
+        views.subtopic_detail,
+        name="subtopic_detail",
+    ),
+    # Past papers
+    path("past-papers/", views.pastpaper_program_list, name="pastpaper_program_list"),
+    path(
+        "past-papers/<slug:program_slug>/",
+        views.pastpaper_semester_list,
+        name="pastpaper_semester_list",
+    ),
+    path(
+        "past-papers/<slug:program_slug>/<int:semester_number>/",
+        views.pastpaper_subject_list,
+        name="pastpaper_subject_list",
+    ),
+    path(
+        "past-papers/<slug:program_slug>/<int:semester_number>/<slug:subject_slug>/",
+        views.pastpaper_year_list,
+        name="pastpaper_year_list",
+    ),
+    path(
+        "past-papers/<slug:program_slug>/<int:semester_number>/<slug:subject_slug>/<int:year>/",
+        views.pastpaper_detail,
+        name="pastpaper_detail",
+    ),
+    path(
+        "api/content/<str:kind>/<int:pk>/",
+        views.keyword_content_api,
+        name="keyword_content_api",
+    ),
+    path("topics/", views.topic_browse, name="topic_browse"),
+    path("topics/partial/", views.topic_browse_partial, name="topic_browse_partial"),
+]

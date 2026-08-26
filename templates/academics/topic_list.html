@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load academics_extras %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs"><div class="wrap">
+  <a href="{% url 'core:home' %}">Home</a><span class="sep">/</span>
+  <a href="{% url 'academics:program_list' %}">Courses</a><span class="sep">/</span>
+  <a href="{{ program.get_absolute_url }}">{{ program.short_name }}</a><span class="sep">/</span>
+  <a href="{{ semester.get_absolute_url }}">{{ semester.display_name }}</a><span class="sep">/</span>
+  <span class="current">{{ subject.name }}</span>
+</div></div>
+{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="wrap" style="max-width:820px;">
+    <span class="eyebrow">{{ program.short_name }} · {{ semester.display_name }}{% if subject.code %} · {{ subject.code }}{% endif %}</span>
+    {% if subject.cover_image_drive_link %}
+    <img src="{{ subject.cover_image_drive_link|drive_image_url }}" alt="{{ subject.name }} cover" class="subject-cover">
+    {% endif %}
+    <h1>{{ subject.name }}</h1>
+    {% if subject.description %}<p>{{ subject.description }}</p>{% endif %}
+    {% if subject.credit_hours %}<p class="eyebrow">Credit hours: {{ subject.credit_hours }}</p>{% endif %}
+
+    <div class="section-head" style="margin-top:2rem;">
+      <h2 style="margin:0;">Topic outline</h2>
+      <a href="{{ subject.get_past_papers_url }}" class="btn btn-outline btn-sm">Past papers for this subject →</a>
+    </div>
+
+    {% if topics %}
+    <ol class="toc-list">
+      {% for topic in topics %}
+      <li class="toc-block">
+        <div class="toc-item">
+          <span class="toc-num">{{ forloop.counter|stringformat:"02d" }}</span>
+          <a href="{{ topic.get_absolute_url }}" class="toc-title">{{ topic.title }}</a>
+          <span class="toc-fill"></span>
+          <span class="toc-icons">
+            {% if topic.videos.exists %}▶{% endif %}
+            {% if topic.images.count %}🖼{% endif %}
+            {% if topic.documents.exists %}📄{% endif %}
+          </span>
+        </div>
+        {% if topic.subtopics.all %}
+        <ul class="subtopic-list">
+          {% for sub in topic.subtopics.all %}
+          <li>
+            <a href="{{ sub.get_absolute_url }}">{{ sub.title }}</a>
+            {% if sub.videos.exists %}<span class="sub-icon">▶</span>{% endif %}
+            {% if sub.images.exists %}<span class="sub-icon">🖼</span>{% endif %}
+            {% if sub.documents.exists %}<span class="sub-icon">📄</span>{% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ol>
+    {% else %}
+    <div class="empty-state">
+      <h3>No topics yet</h3>
+      <p>The admin hasn't added topic notes for this subject yet.</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

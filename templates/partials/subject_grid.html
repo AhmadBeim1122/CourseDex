@@ -1,0 +1,22 @@
+{% if subjects %}
+<div class="grid grid-3">
+  {% for subject in subjects %}
+  <a href="{% if mode == 'pastpapers' %}{{ subject.get_past_papers_url }}{% else %}{{ subject.get_absolute_url }}{% endif %}" class="card subject-card">
+    <div class="top">
+      <h3>{{ subject.name }}</h3>
+      {% if subject.code %}<span class="code-chip">{{ subject.code }}</span>{% endif %}
+    </div>
+    {% if subject.description %}<p>{{ subject.description|truncatewords:18 }}</p>{% endif %}
+    <div class="meta">
+      {% if mode == 'pastpapers' %}
+        {{ subject.past_paper_years|length }} year{{ subject.past_paper_years|length|pluralize }} available
+      {% else %}
+        {{ subject.topic_count }} topic{{ subject.topic_count|pluralize }}
+      {% endif %}
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state"><h3>No subjects yet</h3></div>
+{% endif %}

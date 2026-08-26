@@ -1,0 +1,18 @@
+{% if videos %}
+<h3>Videos</h3>
+<div class="video-gallery">
+  {% for v in videos %}
+    {% if v.embed_id %}
+    <div class="ratio-16x9 lite-embed" data-embed-src="https://www.youtube.com/embed/{{ v.embed_id }}">
+      <div class="lite-embed-thumb" onclick="loadLiteEmbed(this)">
+        <img src="https://img.youtube.com/vi/{{ v.embed_id }}/hqdefault.jpg" loading="lazy" alt="{{ v.title|default:'Video thumbnail' }}">
+        <span class="lite-play-btn">▶</span>
+      </div>
+      {% if v.title %}<span class="video-caption">{{ v.title }}</span>{% endif %}
+    </div>
+    {% else %}
+    <a href="{{ v.youtube_url }}" target="_blank" rel="noopener" class="doc-item">▶ {{ v.title|default:"Watch on YouTube" }} ↗</a>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endif %}

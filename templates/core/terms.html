@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block breadcrumbs %}
+<div class="breadcrumbs"><div class="wrap"><a href="{% url 'core:home' %}">Home</a><span class="sep">/</span><span class="current">Terms of Service</span></div></div>
+{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="wrap topic-body" style="max-width:760px;">
+    <span class="eyebrow">Legal</span>
+    <h1>Terms of Service</h1>
+    <p>Last updated: {% now "F Y" %}</p>
+
+    <p>By using {{ SITE_NAME }}, you agree to the following terms.</p>
+
+    <h2>Use of content</h2>
+    <p>All notes, outlines and past papers are provided free of charge for personal, educational use. You may not republish, resell, or redistribute this content in bulk without permission.</p>
+
+    <h2>No warranty</h2>
+    <p>Study notes and past-paper solutions are provided "as is" for reference and practice. We try to keep content accurate and up to date, but we do not guarantee that it is error-free or that it matches your institution's current syllabus or official past papers. Always verify important details with your instructor or department.</p>
+
+    <h2>Third-party content</h2>
+    <p>Some material (videos, images, documents) is hosted on third-party platforms such as YouTube and Google Drive and linked from this site. We are not responsible for the availability or content of those external services.</p>
+
+    <h2>No accounts or payments</h2>
+    <p>This site does not require registration and does not process payments. Any future features that do will be described in an updated version of these terms.</p>
+
+    <h2>Changes to these terms</h2>
+    <p>We may update these terms from time to time. Continued use of the site after changes means you accept the updated terms.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about these terms can be sent via our <a href="{% url 'core:contact' %}">Contact page</a>.</p>
+  </div>
+</section>
+{% endblock %}

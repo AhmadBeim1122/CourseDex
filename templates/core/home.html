@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load academics_extras %}
+{% block content %}
+{% load static %}
+
+
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-copy">
+      <span class="eyebrow">Free · No login required</span>
+      <h1>Study notes &amp; solved past papers, organized by program.</h1>
+      <p class="lead">Pick your program, jump to your semester, and open a subject to read topic-by-topic notes, watch linked video explanations, and download solved past papers — all free, no account needed.</p>
+      <div class="hero-actions">
+        <a href="{% url 'academics:program_list' %}" class="btn btn-amber">Browse Courses</a>
+        <a href="{% url 'academics:pastpaper_program_list' %}" class="btn btn-outline">Past Papers</a>
+      </div>
+      <form class="hero-search" action="{% url 'academics:program_list' %}" method="get">
+        <div class="search-box">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="search" name="q" placeholder="Search for a program, e.g. BSIT">
+        </div>
+      </form>
+    </div>
+
+    <div class="hero-card">
+      <div class="eyebrow" style="margin-bottom:.8rem;">On {{ SITE_NAME }} right now</div>
+      <div class="hero-stat"><span class="label">Programs</span><span class="num">{{ stats.programs }}</span></div>
+      <div class="hero-stat"><span class="label">Subjects</span><span class="num">{{ stats.subjects }}</span></div>
+      <div class="hero-stat"><span class="label">Topics &amp; notes</span><span class="num">{{ stats.topics }}</span></div>
+      <div class="hero-stat"><span class="label">Solved past papers</span><span class="num">{{ stats.past_papers }}</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Programs</span>
+        <h2>Choose your program</h2>
+      </div>
+      <a href="{% url 'academics:program_list' %}" class="btn btn-outline btn-sm">View all →</a>
+    </div>
+
+    {% if programs %}
+    <div class="grid grid-4">
+      {% for program in programs %}
+      <a href="{{ program.get_absolute_url }}" class="card program-card {% cycle 'tint-1' 'tint-2' 'tint-3' 'tint-4' %}">
+          {% if program.icon_drive_link %}<img src="{{ program.icon_drive_link|drive_image_url }}" alt="{{ program.short_name }} icon" class="program-icon">{% endif %}
+        <span class="code">{{ program.short_name }}</span>
+        <h3>{{ program.name }}</h3>
+        <p>{{ program.description|default:"Semester-wise subjects, topic notes and past papers."|truncatewords:16 }}</p>
+        <div class="meta"><span>{{ program.total_semesters }} semesters</span><span>{{ program.subject_count }} subjects</span></div>
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <h3>Programs coming soon</h3>
+      <p>The admin hasn't added any programs yet. Check back soon!</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section" style="background:var(--paper-raised); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">How it works</span>
+        <h2>Three steps to your notes</h2>
+      </div>
+    </div>
+    <div class="grid grid-3">
+      <div class="card" style="padding:1.4rem;">
+        <span class="eyebrow">Step 1</span>
+        <h3>Pick your program &amp; semester</h3>
+        <p style="color:var(--ink-soft); font-size:.92rem;">Start from BSIT, BSCS, or any listed program, then choose the semester you're currently in.</p>
+      </div>
+      <div class="card" style="padding:1.4rem;">
+        <span class="eyebrow">Step 2</span>
+        <h3>Open a subject</h3>
+        <p style="color:var(--ink-soft); font-size:.92rem;">Every subject has a full topic outline — read notes, watch a linked video, or open shared documents for each topic.</p>
+      </div>
+      <div class="card" style="padding:1.4rem;">
+        <span class="eyebrow">Step 3</span>
+        <h3>Practice with past papers</h3>
+        <p style="color:var(--ink-soft); font-size:.92rem;">Browse solved past papers by year for the same subject — question paper plus solution, when available.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section about-split-section">
+  <div class="wrap about-split">
+    <div class="about-illustration">
+      <img src="{% static 'img/illustration-study.svg' %}" alt="Student studying online with a laptop and books" loading="lazy">
+    </div>
+    <div class="about-copy">
+      <span class="eyebrow">About {{ SITE_NAME }}</span>
+      <h2>Built for students, kept simple</h2>
+      <p>{{ site_settings.about_text|default:"Our LMS system collects semester-wise subject notes and solved past papers in one place so you don't have to hunt through group chats and random PDFs before an exam. No sign-up, no payment — just open a subject and start reading." }}</p>
+      <a href="{% url 'core:about' %}" class="btn btn-outline btn-sm">More about us →</a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="feature-grid">
+      <div class="feature-item">
+        <span class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg>
+        </span>
+        <h4>100% free, no login</h4>
+        <p>No account, no subscription — just open a subject and start reading.</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 4v16"/></svg>
+        </span>
+        <h4>Organized by program</h4>
+        <p>Every program, semester and subject is structured exactly like your degree.</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+        </span>
+        <h4>Solved past papers</h4>
+        <p>Practice with real exam papers by year, with written or image solutions.</p>
+      </div>
+      <div class="feature-item">
+        <span class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+        </span>
+        <h4>Works on any device</h4>
+        <p>Fast, lightweight pages that work smoothly on mobile, tablet or desktop.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

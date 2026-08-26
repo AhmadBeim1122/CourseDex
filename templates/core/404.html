@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="section">
+  <div class="wrap empty-state">
+    <span class="eyebrow">404</span>
+    <h1>Page not found</h1>
+    <p>The page you're looking for doesn't exist or may have moved.</p>
+    <a href="{% url 'core:home' %}" class="btn btn-amber">Back to Home</a>
+  </div>
+</section>
+{% endblock %}

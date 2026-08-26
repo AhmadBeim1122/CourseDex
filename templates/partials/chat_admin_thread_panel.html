@@ -1,0 +1,25 @@
+<div id="chat-thread-panel-wrapper" class="chat-admin-main">
+  <div class="chat-admin-thread-header">
+    <h3>{{ visitor.name }}</h3>
+    <span class="chat-admin-thread-sub">Started {{ visitor.created_at|date:"M d, Y H:i" }}</span>
+  </div>
+
+  <div class="chat-admin-messages">
+    {% for msg in messages %}
+    <div class="chat-bubble-row {% if msg.sender == 'admin' %}is-admin{% else %}is-user{% endif %}">
+      <div class="chat-bubble">{{ msg.message }}</div>
+      <span class="chat-bubble-time">{{ msg.created_at|date:"M d, H:i" }}</span>
+    </div>
+    {% endfor %}
+  </div>
+
+  <form class="chat-admin-reply-form" hx-post="{% url 'core:chat_admin_reply' visitor.id %}" hx-target="#chat-thread-panel-wrapper" hx-swap="outerHTML">
+    {% csrf_token %}
+    <textarea name="message" class="input" placeholder="Type your reply…" required rows="2"></textarea>
+    <button type="submit" class="btn btn-amber btn-sm">Send</button>
+  </form>
+</div>
+
+<div id="chat-row-{{ visitor.id }}" hx-swap-oob="true">
+  {% include "partials/chat_admin_row.html" with visitor=visitor active_id=active_id %}
+</div>

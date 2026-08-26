@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block breadcrumbs %}
+<div class="breadcrumbs"><div class="wrap">
+  <a href="{% url 'core:home' %}">Home</a><span class="sep">/</span>
+  {% if mode == 'pastpapers' %}
+    <a href="{% url 'academics:pastpaper_program_list' %}">Past Papers</a><span class="sep">/</span>
+    <a href="{{ program.get_past_papers_url }}">{{ program.short_name }}</a><span class="sep">/</span>
+  {% else %}
+    <a href="{% url 'academics:program_list' %}">Courses</a><span class="sep">/</span>
+    <a href="{{ program.get_absolute_url }}">{{ program.short_name }}</a><span class="sep">/</span>
+  {% endif %}
+  <span class="current">{{ semester.display_name }}</span>
+</div></div>
+{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="wrap" id="subject-wrap">
+    <span class="eyebrow">{{ program.short_name }} · {{ semester.display_name }}{% if mode == 'pastpapers' %} · Past Papers{% endif %}</span>
+    <h1>Subjects</h1>
+    <p>{% if mode == 'pastpapers' %}Pick a subject to see which years have solved past papers available.{% else %}Pick a subject to open its full topic outline.{% endif %}</p>
+
+    {% if subjects %}
+    <div class="grid grid-3" style="margin-top:2rem;">
+      {% for subject in subjects %}
+      <a href="{% if mode == 'pastpapers' %}{{ subject.get_past_papers_url }}{% else %}{{ subject.get_absolute_url }}{% endif %}" class="card subject-card">
+        <div class="top">
+          <h3>{{ subject.name }}</h3>
+          {% if subject.code %}<span class="code-chip">{{ subject.code }}</span>{% endif %}
+        </div>
+        {% if subject.description %}<p>{{ subject.description|truncatewords:18 }}</p>{% endif %}
+        <div class="meta">
+          {% if mode == 'pastpapers' %}
+            {{ subject.past_paper_years|length }} year{{ subject.past_paper_years|length|pluralize }} available
+          {% else %}
+            {{ subject.topic_count }} topic{{ subject.topic_count|pluralize }}
+          {% endif %}
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <h3>No subjects yet</h3>
+      <p>The admin hasn't added subjects for this semester yet.</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

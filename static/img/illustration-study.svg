@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 400">
+  <circle cx="240" cy="200" r="180" fill="#E3A008" opacity="0.12"/>
+  <circle cx="240" cy="200" r="130" fill="#0F766E" opacity="0.10"/>
+
+  <rect x="120" y="260" width="240" height="14" rx="7" fill="#17203A" opacity="0.08"/>
+
+  <!-- desk -->
+  <rect x="140" y="230" width="200" height="10" rx="4" fill="#17203A"/>
+  <rect x="150" y="240" width="10" height="40" fill="#17203A"/>
+  <rect x="320" y="240" width="10" height="40" fill="#17203A"/>
+
+  <!-- laptop -->
+  <rect x="190" y="175" width="100" height="62" rx="6" fill="#FFFFFF" stroke="#17203A" stroke-width="4"/>
+  <rect x="200" y="185" width="80" height="6" rx="3" fill="#0F766E"/>
+  <rect x="200" y="197" width="60" height="6" rx="3" fill="#D7DCE6"/>
+  <rect x="200" y="209" width="70" height="6" rx="3" fill="#D7DCE6"/>
+  <rect x="200" y="221" width="45" height="6" rx="3" fill="#E3A008"/>
+  <path d="M180 237 h120 l8 14 h-136 z" fill="#17203A"/>
+
+  <!-- person -->
+  <circle cx="240" cy="120" r="26" fill="#E3A008"/>
+  <path d="M195 175 c0 -30 90 -30 90 0 v10 h-90 z" fill="#0F766E"/>
+
+  <!-- floating book -->
+  <g transform="translate(90,110) rotate(-12)">
+    <rect width="52" height="38" rx="4" fill="#FFFFFF" stroke="#17203A" stroke-width="3"/>
+    <line x1="26" y1="4" x2="26" y2="34" stroke="#17203A" stroke-width="2"/>
+    <line x1="8" y1="12" x2="22" y2="12" stroke="#0F766E" stroke-width="3"/>
+    <line x1="8" y1="20" x2="22" y2="20" stroke="#0F766E" stroke-width="3"/>
+  </g>
+
+  <!-- graduation cap -->
+  <g transform="translate(330,90)">
+    <path d="M0 10 L38 0 L76 10 L38 20 Z" fill="#17203A"/>
+    <rect x="34" y="18" width="8" height="22" fill="#17203A"/>
+    <circle cx="38" cy="42" r="5" fill="#E3A008"/>
+  </g>
+
+  <!-- checkmark badge -->
+  <g transform="translate(330,220)">
+    <circle cx="20" cy="20" r="20" fill="#0F766E"/>
+    <path d="M11 20 l6 6 12 -14" stroke="#FFFFFF" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

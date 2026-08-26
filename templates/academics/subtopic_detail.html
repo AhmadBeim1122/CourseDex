@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load academics_extras %}
+{% block breadcrumbs %}
+<div class="breadcrumbs"><div class="wrap">
+  <a href="{% url 'core:home' %}">Home</a><span class="sep">/</span>
+  <a href="{% url 'academics:program_list' %}">Courses</a><span class="sep">/</span>
+  <a href="{{ program.get_absolute_url }}">{{ program.short_name }}</a><span class="sep">/</span>
+  <a href="{{ semester.get_absolute_url }}">{{ semester.display_name }}</a><span class="sep">/</span>
+  <a href="{{ subject.get_absolute_url }}">{{ subject.name }}</a><span class="sep">/</span>
+  <a href="{{ topic.get_absolute_url }}">{{ topic.title }}</a><span class="sep">/</span>
+  <span class="current">{{ subtopic.title }}</span>
+</div></div>
+{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="wrap with-sidebar">
+
+    <aside class="outline-side">
+      <h4>{{ topic.title }} — Subtopics</h4>
+      <ol>
+        {% for s in topic.subtopics.all %}
+        <li><a href="{{ s.get_absolute_url }}" class="{% if s.id == subtopic.id %}current{% endif %}">{{ forloop.counter }}. {{ s.title }}</a></li>
+        {% endfor %}
+      </ol>
+      <p style="margin-top:1rem;"><a href="{{ topic.get_absolute_url }}" class="btn btn-outline btn-sm">← Back to {{ topic.title }}</a></p>
+    </aside>
+
+    <article class="topic-detail">
+      <span class="eyebrow">{{ subject.name }} · {{ topic.title }}</span>
+      <h1>{{ subtopic.title }}</h1>
+
+      {% if subtopic.images.all %}
+      <div class="image-gallery">
+        {% for img in subtopic.images.all %}
+        <figure>
+          <a href="{{ img.url }}" target="_blank" rel="noopener"><img src="{{ img.url|drive_image_url }}" alt="{{ img.caption|default:subtopic.title }}" loading="lazy"></a>
+          {% if img.caption %}<figcaption>{{ img.caption }}</figcaption>{% endif %}
+        </figure>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+       {% if subtopic.content %}
+      <div class="topic-body">{{ subtopic.content|safe }}</div>
+      {% else %}
+      <div class="empty-state"><p>Content for this subtopic is coming soon.</p></div>
+      {% endif %}
+
+      {% include "partials/video_gallery.html" with videos=subtopic.videos.all %}
+
+      {% if subtopic.documents.all %}
+      <h3>Documents</h3>
+      <div class="doc-list">
+        {% for doc in subtopic.documents.all %}
+        <a href="{{ doc.drive_link }}" target="_blank" rel="noopener" class="doc-item">
+          <span>📄</span> {{ doc.title|default:"Open document" }} ↗
+        </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+
+      {% if subject_past_papers %}
+      <h3>Past Papers for {{ subject.name }}</h3>
+      <div class="pastpaper-mini-grid">
+        {% for paper in subject_past_papers %}
+        <a href="{{ paper.get_absolute_url }}" class="pastpaper-mini-card">
+          <div class="pastpaper-mini-thumb">
+            {% if paper.paper_drive_link|is_pdf_link %}
+              <span class="pastpaper-mini-pdf-icon">📄</span>
+            {% else %}
+              <img src="{{ paper.paper_drive_link|drive_image_url }}" alt="{{ subject.name }} {{ paper.year }}" loading="lazy">
+            {% endif %}
+          </div>
+          <div class="pastpaper-mini-meta">
+            <span class="pastpaper-mini-year">{{ paper.year }}</span>
+            <span class="pastpaper-mini-type">{{ paper.get_exam_type_display }}</span>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="topic-pager">
+        {% if prev_subtopic %}<a href="{{ prev_subtopic.get_absolute_url }}" class="prev"><span class="dir">← Previous</span>{{ prev_subtopic.title }}</a>{% else %}<span></span>{% endif %}
+        {% if next_subtopic %}<a href="{{ next_subtopic.get_absolute_url }}" class="next"><span class="dir">Next →</span>{{ next_subtopic.title }}</a>{% endif %}
+      </div>
+    </article>
+  </div>
+</section>
+{% endblock %}

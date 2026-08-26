@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block breadcrumbs %}
+<div class="breadcrumbs"><div class="wrap"><a href="{% url 'core:home' %}">Home</a><span class="sep">/</span><span class="current">About</span></div></div>
+{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="wrap" style="max-width:760px;">
+    <span class="eyebrow">About Us</span>
+    <h1>Notes and past papers, organized the way students actually study.</h1>
+    {% if site_settings.about_text %}
+      <div class="topic-body">{{ site_settings.about_text|linebreaks }}</div>
+    {% else %}
+      <p>{{ SITE_NAME }} is a free study resource for university students. We organize content the same way your degree is structured: by program, then semester, then subject — so you can go straight to what you need before an exam.</p>
+      <p>Every subject includes a topic-by-topic outline with notes, and where useful, a linked video explanation or a shared document. Alongside notes, we keep a growing archive of solved past papers by year, so you can practice with real exam questions.</p>
+      <p>There's no login, no signup and nothing to buy — just open a subject and start reading.</p>
+    {% endif %}
+
+    <h2>What you'll find here</h2>
+    <div class="grid grid-2">
+      <div class="card" style="padding:1.3rem;">
+        <h3>Course notes</h3>
+        <p style="color:var(--ink-soft); font-size:.92rem;">Semester-wise subjects with a full topic outline, explanations, images and video links.</p>
+      </div>
+      <div class="card" style="padding:1.3rem;">
+        <h3>Solved past papers</h3>
+        <p style="color:var(--ink-soft); font-size:.92rem;">Past exam papers by subject and year, with written or image-based solutions where available.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:2rem;">
+      <a href="{% url 'core:contact' %}" class="btn btn-amber">Get in touch</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

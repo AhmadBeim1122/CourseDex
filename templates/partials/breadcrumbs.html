@@ -1,0 +1,14 @@
+{% load static %}
+<div class="breadcrumbs">
+  <div class="wrap">
+    <a href="{% url 'core:home' %}">Home</a>
+    {% for crumb in crumbs %}
+      <span class="sep">/</span>
+      {% if forloop.last %}
+        <span class="current">{{ crumb.label }}</span>
+      {% else %}
+        <a href="{{ crumb.url }}">{{ crumb.label }}</a>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>

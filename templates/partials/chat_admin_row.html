@@ -1,0 +1,11 @@
+<div id="chat-row-{{ visitor.id }}" class="chat-admin-row {% if active_id == visitor.id %}is-active{% endif %}"
+     hx-get="{% url 'core:chat_admin_thread' visitor.id %}" hx-target="#chat-thread-panel-wrapper" hx-swap="outerHTML">
+  <div class="chat-admin-row-top">
+    <strong>{{ visitor.name }}</strong>
+    {% if visitor.unread_count %}<span class="chat-unread-badge">{{ visitor.unread_count }}</span>{% endif %}
+  </div>
+  {% if visitor.last_message %}
+  <p class="chat-admin-row-preview">{{ visitor.last_message.message|truncatechars:60 }}</p>
+  <span class="chat-admin-row-time">{{ visitor.last_message_time|date:"M d, H:i" }}</span>
+  {% endif %}
+</div>

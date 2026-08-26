@@ -1,0 +1,25 @@
+{% for item in page_obj %}
+<a href="javascript:void(0)" class="browse-topic-card" data-kind="{{ item.kind }}" data-id="{{ item.id }}">
+  <span class="browse-kind-tag {% if item.kind == 'subtopic' %}is-sub{% endif %}">{% if item.kind == 'subtopic' %}Subtopic{% else %}Topic{% endif %}</span>
+  <h3>{{ item.title }}</h3>
+  <p class="browse-path">{{ item.program }} · {{ item.subject }}</p>
+  <div class="browse-icons">
+    {% if item.has_video %}<span>▶</span>{% endif %}
+    {% if item.has_image %}<span>🖼</span>{% endif %}
+    {% if item.has_doc %}<span>📄</span>{% endif %}
+  </div>
+</a>
+{% empty %}
+<div class="empty-state">
+  <h3>No topics found</h3>
+  <p>Try a different search{% if query %} — no results for “{{ query }}”{% endif %}.</p>
+</div>
+{% endfor %}
+
+{% if page_obj.has_next %}
+<div class="scroll-sentinel"
+     hx-get="{% url 'academics:topic_browse_partial' %}?page={{ page_obj.next_page_number }}&q={{ query|urlencode }}"
+     hx-trigger="revealed" hx-swap="outerHTML">
+  <span class="loading-dots">Loading more topics…</span>
+</div>
+{% endif %}

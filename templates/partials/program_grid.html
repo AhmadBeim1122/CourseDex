@@ -1,0 +1,20 @@
+{% load academics_extras %}
+{% if programs %}
+<div class="grid grid-4">
+  {% for program in programs %}
+  <a href="{% if mode == 'pastpapers' %}{{ program.get_past_papers_url }}{% else %}{{ program.get_absolute_url }}{% endif %}" class="card program-card {% cycle 'tint-1' 'tint-2' 'tint-3' 'tint-4' %}">
+        {% if program.icon_drive_link %}<img src="{{ program.icon_drive_link|drive_image_url }}" alt="{{ program.short_name }} icon" class="program-icon">{% endif %}
+    <span class="code">{{ program.short_name }}</span>
+    <h3>{{ program.name }}</h3>
+    <p>{{ program.description|default:"Semester-wise subjects, topic notes and past papers."|truncatewords:16 }}</p>
+    <div class="meta"><span>{{ program.total_semesters }} semesters</span><span>{{ program.subject_count }} subjects</span></div>
+    <span class="arrow">→</span>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <h3>No programs found</h3>
+  <p>Try a different search{% if query %} — no results for “{{ query }}”{% endif %}.</p>
+</div>
+{% endif %}

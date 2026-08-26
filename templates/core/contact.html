@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block breadcrumbs %}
+<div class="breadcrumbs"><div class="wrap"><a href="{% url 'core:home' %}">Home</a><span class="sep">/</span><span class="current">Contact</span></div></div>
+{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="wrap" style="max-width:640px;">
+    <span class="eyebrow">Contact Us</span>
+    <h1>Questions, corrections, or want to contribute notes?</h1>
+    <p>Send us a message and we'll get back to you by email.</p>
+
+    {% if site_settings.contact_email or site_settings.whatsapp_url %}
+    <div class="card" style="padding:1.2rem 1.4rem; margin-bottom:2rem;">
+      {% if site_settings.contact_email %}<p style="margin:0 0 .4rem;"><strong>Email:</strong> <a href="mailto:{{ site_settings.contact_email }}">{{ site_settings.contact_email }}</a></p>{% endif %}
+      {% if site_settings.contact_phone %}<p style="margin:0 0 .4rem;"><strong>Phone:</strong> {{ site_settings.contact_phone }}</p>{% endif %}
+      {% if site_settings.whatsapp_url %}<p style="margin:0;"><strong>WhatsApp:</strong> <a href="{{ site_settings.whatsapp_url }}" target="_blank" rel="noopener">Chat with us</a></p>{% endif %}
+    </div>
+    {% endif %}
+
+    <div id="contact-form-wrap">
+      {% include "partials/contact_form.html" %}
+    </div>
+  </div>
+</section>
+{% endblock %}

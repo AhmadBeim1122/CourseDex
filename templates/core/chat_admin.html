@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block breadcrumbs %}
+<div class="breadcrumbs"><div class="wrap"><a href="{% url 'core:home' %}">Home</a><span class="sep">/</span><span class="current">Chat Inbox</span></div></div>
+{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="wrap">
+    <span class="eyebrow">Staff only</span>
+    <h1>Chat Inbox</h1>
+    <p>Conversations started by visitors through the site's chat widget.</p>
+
+    <div class="chat-admin-layout">
+      <aside class="chat-admin-sidebar">
+        <div class="chat-admin-list-head">
+          <h4>Conversations</h4>
+          <button type="button" class="btn btn-outline btn-sm" hx-get="{% url 'core:chat_admin_list_partial' %}" hx-target="#chat-admin-list-items" hx-swap="innerHTML">🔄 Refresh</button>
+        </div>
+        <div id="chat-admin-list-items">
+          {% include "partials/chat_admin_list_items.html" %}
+        </div>
+      </aside>
+
+      <main class="chat-admin-main" id="chat-thread-panel-wrapper">
+        <div class="chat-admin-empty-state">
+          <p>Select a conversation from the left to view messages.</p>
+        </div>
+      </main>
+    </div>
+  </div>
+</section>
+{% endblock %}

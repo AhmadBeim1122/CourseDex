@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block breadcrumbs %}
+<div class="breadcrumbs"><div class="wrap"><a href="{% url 'core:home' %}">Home</a><span class="sep">/</span><span class="current">Disclaimer</span></div></div>
+{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="wrap topic-body" style="max-width:760px;">
+    <span class="eyebrow">Legal</span>
+    <h1>Disclaimer</h1>
+    <p>{{ SITE_NAME }} is an independent, student-run study resource and is not officially affiliated with any university, college, or examination board unless explicitly stated.</p>
+    <p>Subject outlines, notes, and past papers are compiled for study and revision purposes. While we aim for accuracy, past papers and solutions may contain errors or may not exactly match the most recent official syllabus or paper pattern. Always cross-check with your institution's official material before an exam.</p>
+    <p>Linked videos, images, and documents may be hosted on third-party platforms (such as YouTube or Google Drive) and are subject to those platforms' own terms and availability.</p>
+  </div>
+</section>
+{% endblock %}

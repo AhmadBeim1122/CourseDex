@@ -1,0 +1,32 @@
+{% if visitor %}
+<p class="chat-visitor-label">Chatting as <strong>{{ visitor.name }}</strong></p>
+{% endif %}
+
+{% if messages %}
+<div class="chat-thread" id="chat-thread-scroll">
+  {% for msg in messages %}
+  <div class="chat-bubble-row {% if msg.sender == 'admin' %}is-admin{% else %}is-user{% endif %}">
+    <div class="chat-bubble">{{ msg.message }}</div>
+    <span class="chat-bubble-time">{{ msg.created_at|date:"M d, H:i" }}</span>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p class="chat-intro">👋 Have a question? Send us a message and we'll reply here.</p>
+{% endif %}
+
+<form class="chat-send-form" hx-post="{% url 'core:chat_send' %}" hx-target="#chat-modal-body" hx-swap="innerHTML">
+  {% csrf_token %}
+  {% if not visitor %}
+  <div class="field">
+    <label for="chatName">Your name</label>
+    <input type="text" id="chatName" name="name" class="input" required maxlength="80" placeholder="Enter your name">
+  </div>
+  {% endif %}
+  <div class="field">
+    <label for="chatMessage">Message</label>
+    <textarea id="chatMessage" name="message" class="input" required maxlength="2000" rows="3" placeholder="Write your message…"></textarea>
+  </div>
+  {% if errors %}<p class="chat-error">{{ errors }}</p>{% endif %}
+  <button type="submit" class="btn btn-amber btn-sm chat-send-btn">Send</button>
+</form>

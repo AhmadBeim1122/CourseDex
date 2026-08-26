@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block breadcrumbs %}
+<div class="breadcrumbs"><div class="wrap">
+  <a href="{% url 'core:home' %}">Home</a><span class="sep">/</span>
+  <a href="{% url 'academics:pastpaper_program_list' %}">Past Papers</a><span class="sep">/</span>
+  <a href="{{ program.get_past_papers_url }}">{{ program.short_name }}</a><span class="sep">/</span>
+  <a href="{{ semester.get_past_papers_url }}">{{ semester.display_name }}</a><span class="sep">/</span>
+  <span class="current">{{ subject.name }}</span>
+</div></div>
+{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="wrap">
+    <span class="eyebrow">{{ program.short_name }} · {{ semester.display_name }}{% if subject.code %} · {{ subject.code }}{% endif %}</span>
+    <h1>{{ subject.name }} — Past Papers</h1>
+    <p>Only years the admin has actually added are shown below.</p>
+
+    {% if years %}
+    <div class="year-grid" style="margin-top:2rem;">
+      {% for year in years %}
+      <a href="{% url 'academics:pastpaper_detail' program.slug semester.number subject.slug year %}" class="year-stamp" style="--tilt: {% cycle '-2deg' '1deg' '-1deg' '2deg' '0deg' %};">
+        <span class="yr">{{ year }}</span>
+        <span class="lbl">Papers</span>
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <h3>No past papers yet</h3>
+      <p>The admin hasn't uploaded past papers for this subject yet. Check back later!</p>
+    </div>
+    {% endif %}
+
+    <div style="margin-top:2.5rem;">
+      <a href="{{ subject.get_absolute_url }}" class="btn btn-outline btn-sm">← Back to {{ subject.name }} notes</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

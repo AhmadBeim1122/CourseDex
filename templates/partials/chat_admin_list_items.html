@@ -1,0 +1,5 @@
+{% for visitor in visitors %}
+  {% include "partials/chat_admin_row.html" with visitor=visitor active_id=active_id %}
+{% empty %}
+  <p class="chat-admin-empty">No conversations yet.</p>
+{% endfor %}

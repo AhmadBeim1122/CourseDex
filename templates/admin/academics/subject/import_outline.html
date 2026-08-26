@@ -1,0 +1,13 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<div id="content-main">
+  <h1>Import topics for "{{ subject.name }}"</h1>
+  <p>Paste the full subject outline below. Each heading followed by a colon becomes one Topic — everything after it (up to the next heading) is saved as that topic's notes/subtopics, so nothing is lost.</p>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Create topics" class="default">
+    <a href="{% url 'admin:academics_subject_change' subject.pk %}" class="button" style="margin-left:10px;">Cancel</a>
+  </form>
+</div>
+{% endblock %}
