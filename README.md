@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # iSchool LMS — Django Edition
 
 A from-scratch **Django** rebuild of the original PHP/MySQL "iSchool" project.
@@ -213,3 +214,7 @@ local disk beyond Django's defaults, so this is a drop-in change in
 
 
 ab past paper waly sy kuch kuch changes krni ha sb se phle yeh ke question paper ki picture drive pr ha to kya iss tarah kr skte jo picture drive wo get krke 
+=======
+# CourseDex
+This project is for Getting past papers
+>>>>>>> a238376edac1be4423c9d614eeb1305a28af3922
