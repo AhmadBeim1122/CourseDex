@@ -38,6 +38,7 @@ DEBUG = config("DJANGO_DEBUG", default=True, cast=bool)
 ALLOWED_HOSTS = config(
     "DJANGO_ALLOWED_HOSTS", default="127.0.0.1,localhost", cast=Csv()
 )
+ALLOWED_HOSTS += [".vercel.app"]
 CSRF_TRUSTED_ORIGINS = config(
     "DJANGO_CSRF_TRUSTED_ORIGINS", default="", cast=Csv()
 )

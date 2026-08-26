@@ -74,103 +74,7 @@ python manage.py seed_demo_data
 python manage.py runserver
 ```
 
-Visit:
-- Public site → http://127.0.0.1:8000/
-- Admin panel → http://127.0.0.1:8000/admin/
 
-> **This zip already includes a demo `db.sqlite3`** with seeded sample
-> data (2 programs, a few subjects/topics/past papers) and a demo admin
-> account so you can explore immediately:
-> - Username: `admin`
-> - Password: `admin12345`
->
-> **Change this password immediately** (`python manage.py changepassword admin`)
-> or delete `db.sqlite3` and start fresh with `python manage.py migrate`.
-
-
-This project ships with SQLite by default — **zero extra setup**. The
-original project used MySQL; to switch back to MySQL, set in `.env`:
-
-```
-DB_ENGINE=mysql
-DB_NAME=lms_db
-DB_USER=root
-DB_PASSWORD=yourpassword
-DB_HOST=127.0.0.1
-DB_PORT=3306
-```
-
-then `pip install mysqlclient` and re-run `python manage.py migrate`.
-
-## 3. Using the Admin Panel
-
-Log into `/admin/` with the superuser you created. You'll see, in order:
-
-1. **Programs** — add "BSIT", "BSCS", etc. Set `total_semesters` (e.g. 8) —
-   saving a Program **automatically creates all its Semester rows** for you.
-2. **Semesters** — open one from the Program page (inline) or its own list;
-   add Subjects to it directly from the Semester edit screen (inline).
-3. **Subjects** — add topics and past papers directly from the Subject edit
-   screen using the inline tables at the bottom (no need to jump between
-   screens for routine data entry).
-4. **Topics** — the "Study content" tab holds the notes text; "Media &
-   resources" holds the YouTube link and a Google Drive document link.
-   Add up to 6 images per topic using the inline image table at the bottom
-   of the topic form — each image can either be **uploaded** or given a
-   **Drive share link** (leave the file blank and fill the Drive link
-   instead).
-5. **Past Papers** — pick the Subject, Year, and Exam Type, paste the
-   Google Drive link to the scanned question paper, then choose a
-   Solution Type:
-   - *No solution yet* — only the question paper link shows on the site.
-   - *Written solution (text)* — type the solution in the text box.
-   - *Solution image(s) / Drive link* — upload one image and/or paste a
-     Drive folder link with the full solution.
-
-   Only years that have at least one **published** past paper will appear
-   on the public "Past Papers" year picker for that subject — exactly the
-   "jitne bhi admin se add ho wo show hote jae" behavior you asked for.
-
-6. **Site Settings** (singleton) — edit the About page text, contact email/
-   phone, and social links shown in the footer, without editing code.
-7. **Contact Messages** — read-only inbox of messages submitted through the
-   public Contact page.
-
-Every content model has an `is_published` checkbox — uncheck it to hide a
-Program/Semester/Subject/Topic/Past Paper from the public site without
-deleting it.
-
-## 4. Frontend routes (all public, no login)
-
-```
-/                                                          Home
-/courses/                                                  Programs
-/courses/<program>/                                        Semesters
-/courses/<program>/<semester>/                              Subjects
-/courses/<program>/<semester>/<subject>/                    Topic outline
-/courses/<program>/<semester>/<subject>/<topic>/             Topic detail
-
-/past-papers/                                               Programs
-/past-papers/<program>/                                      Semesters
-/past-papers/<program>/<semester>/                            Subjects
-/past-papers/<program>/<semester>/<subject>/                  Years available
-/past-papers/<program>/<semester>/<subject>/<year>/            Papers + solutions
-
-/about/  /contact/  /privacy-policy/  /terms-of-service/  /disclaimer/
-/sitemap.xml  /robots.txt  /ads.txt
-```
-
-## 5. Google AdSense
-
-1. Apply for AdSense once the site has enough real content (a handful of
-   full programs/subjects/topics, plus the legal pages already included).
-2. In `.env`, set `ADSENSE_CLIENT_ID=ca-pub-XXXXXXXXXXXXXXXX` — this
-   automatically:
-   - loads the AdSense script in every page's `<head>`,
-   - serves a correct `/ads.txt`,
-   - activates the ad slots already placed on topic pages and past-paper
-     pages (`<ins class="adsbygoogle">` in the templates).
-3. (Optional) set `GOOGLE_SITE_VERIFICATION` and `GOOGLE_ANALYTICS_ID`.
 
 ## 6. Deploying to production
 
@@ -197,24 +101,12 @@ local disk beyond Django's defaults, so this is a drop-in change in
 
 ## 7. What was intentionally removed from the original PHP project
 
-- Student/Admin login & registration (`loginorsignup.php`, `studentRegistration.php`)
-- Shopping cart / checkout / Paytm payment integration (`checkout.php`,
-  `PaytmKit/`, `paymentstatus.php`)
-- The flat "buy a video course" model — replaced entirely by the
-  Program → Semester → Subject → Topic structure you described.
-
+- Student/Admin login & registration 
 ## 8. Security notes
 
 - `DEBUG=False` in production automatically turns on HSTS, secure cookies,
-  and `X-Frame-Options: DENY` (see bottom of `config/settings.py`).
-- CSRF protection is on for the contact form (Django's default).
-- The admin panel is the *only* authenticated area — keep the superuser
-  password strong and consider putting `/admin/` behind an extra layer
-  (VPN, IP allowlist, or a renamed admin URL) for extra safety.
-
+  and `X-Frame-Options: DENY` 
 
 ab past paper waly sy kuch kuch changes krni ha sb se phle yeh ke question paper ki picture drive pr ha to kya iss tarah kr skte jo picture drive wo get krke 
 =======
 # CourseDex
-This project is for Getting past papers
->>>>>>> a238376edac1be4423c9d614eeb1305a28af3922
