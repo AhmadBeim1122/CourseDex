@@ -43,8 +43,8 @@ CSRF_TRUSTED_ORIGINS = config(
     "DJANGO_CSRF_TRUSTED_ORIGINS", default="", cast=Csv()
 )
 
-SITE_NAME = config("SITE_NAME", default="iSchool LMS")
-SITE_INITIALS = config("SITE_INITIALS", default="iS")
+SITE_NAME = config("SITE_NAME", default="CourseDex")
+SITE_INITIALS = config("SITE_INITIALS", default="CX")
 SITE_DOMAIN = config("SITE_DOMAIN", default="127.0.0.1:8000")
 SITE_DESCRIPTION = config(
     "SITE_DESCRIPTION",

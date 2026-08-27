@@ -13,4 +13,5 @@ def site_settings(request):
         "SITE_DESCRIPTION": settings.SITE_DESCRIPTION,
         "ADSENSE_CLIENT_ID": settings.ADSENSE_CLIENT_ID,
         "GOOGLE_ANALYTICS_ID": settings.GOOGLE_ANALYTICS_ID,
+        "GOOGLE_SITE_VERIFICATION": settings.GOOGLE_SITE_VERIFICATION,
     }
