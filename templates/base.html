@@ -13,7 +13,7 @@
 <title>{% block title %}{{ page_title }} · {{ SITE_NAME }}{% endblock %}</title>
 <meta name="description" content="{% block meta_description %}{{ SITE_DESCRIPTION }}{% endblock %}">
 <meta name="robots" content="index, follow">
-{% if GOOGLE_SITE_VERIFICATION %}<meta name="google-site-verification" content="{{ GOOGLE_SITE_VERIFICATION }}">{% endif %}
+{% if GOOGLE_SITE_VERIFICATION %}<meta name="google-site-verification" content="{{ GOOGLE_SITE_VERIFICATION }}"> {% else %} Not {% endif %}
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
