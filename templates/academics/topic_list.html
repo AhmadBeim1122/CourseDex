@@ -23,7 +23,12 @@
 
     <div class="section-head" style="margin-top:2rem;">
       <h2 style="margin:0;">Topic outline</h2>
-      <a href="{{ subject.get_past_papers_url }}" class="btn btn-outline btn-sm">Past papers for this subject →</a>
+      <div style="display:flex; gap:.6rem; flex-wrap:wrap;">
+        {% if subject.book_drive_link %}
+        <button type="button" class="btn btn-amber btn-sm" data-drive-preview="{{ subject.book_drive_link }}" data-drive-title="{{ subject.name }} — Full Book">📖 Full Book</button>
+        {% endif %}
+        <a href="{{ subject.get_past_papers_url }}" class="btn btn-outline btn-sm">Past papers for this subject →</a>
+      </div>
     </div>
 
     {% if topics %}

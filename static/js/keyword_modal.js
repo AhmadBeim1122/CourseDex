@@ -41,3 +41,37 @@ document.addEventListener("click", function (e) {
       });
   });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+  var driveModalEl = document.getElementById("drivePreviewModal");
+  if (!driveModalEl || typeof bootstrap === "undefined") return;
+
+  var driveModal = new bootstrap.Modal(driveModalEl);
+  var titleEl = document.getElementById("drivePreviewModalLabel");
+  var iframeEl = document.getElementById("drivePreviewIframe");
+  var openLinkEl = document.getElementById("drivePreviewOpenLink");
+
+  function toPreviewUrl(url) {
+    var match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (match) return "https://drive.google.com/file/d/" + match[1] + "/preview";
+    return url;
+  }
+
+  document.addEventListener("click", function (e) {
+    var trigger = e.target.closest("[data-drive-preview]");
+    if (!trigger) return;
+    e.preventDefault();
+
+    var link = trigger.getAttribute("data-drive-preview");
+    var title = trigger.getAttribute("data-drive-title") || "Preview";
+
+    titleEl.textContent = title;
+    iframeEl.src = toPreviewUrl(link);
+    openLinkEl.href = link;
+    driveModal.show();
+  });
+
+  driveModalEl.addEventListener("hidden.bs.modal", function () {
+    iframeEl.src = ""; // stop the embedded viewer when the modal closes
+  });
+});

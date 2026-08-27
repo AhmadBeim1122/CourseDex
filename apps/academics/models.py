@@ -159,6 +159,10 @@ class Subject(TimeStampedModel):
         blank=True,
         help_text="Shareable Google Drive (or other) link to a cover image for this subject (optional — shown on the subject's page).",
     )
+    book_drive_link = models.URLField(
+        blank=True,
+        help_text="Shareable Google Drive link to the full book/PDF/Doc for this subject (optional).",
+    )
     order = models.PositiveIntegerField(default=0)
     is_published = models.BooleanField(default=True)
 
@@ -400,7 +404,7 @@ class SubTopicDocument(TimeStampedModel):
 
 
 # ---------------------------------------------------------------------------
-# Topic  (an item inside a subject's outline — 20-30 per subject typically)
+# API provider
 # ---------------------------------------------------------------------------
 
 

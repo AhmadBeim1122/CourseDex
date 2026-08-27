@@ -57,4 +57,6 @@ urlpatterns = [
     ),
     path("topics/", views.topic_browse, name="topic_browse"),
     path("topics/partial/", views.topic_browse_partial, name="topic_browse_partial"),
+    path("books/", views.book_browse, name="book_browse"),
+    path("books/partial/", views.book_browse_partial, name="book_browse_partial"),
 ]

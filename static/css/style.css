@@ -737,3 +737,24 @@ body.dark #keywordModal .modal-body::-webkit-scrollbar-thumb:hover {
 .chat-visitor-label strong { color: var(--text); }
 .chat-popup-header-sub { display: block; font-size: .7rem; font-weight: 400; color: #cbd2e6; margin-top: .1rem; }
 
+/* ---------- Drive document preview modal ---------- */
+/* ---------- Drive document preview modal ---------- */
+.modal-drive-preview { max-width: 800px; }
+#drivePreviewModal .modal-dialog { max-height: 90vh; }
+#drivePreviewModal .modal-content { max-height: 90vh; }
+#drivePreviewModal .modal-body { overflow-y: auto; }
+.drive-preview-frame-wrap {
+  position: relative;
+  width: 100%;
+  height: 75vh;
+  max-height: 720px;
+  background: var(--paper);
+  overflow-y: auto;
+}
+.drive-preview-frame-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+@media (max-width: 640px) {
+  .drive-preview-frame-wrap { height: 65vh; }
+}
+
+/* ---------- Book cards (reuses .browse-topic-card, tweaks for button element) ---------- */
+.book-card { text-align: left; width: 100%; font-family: inherit; }

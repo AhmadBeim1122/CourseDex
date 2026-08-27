@@ -353,3 +353,49 @@ def topic_browse_partial(request):
     context = {"page_obj": page_obj, "query": q}
     return render(request, "partials/topic_grid_items.html", context)
 
+
+
+# ---------------------------------------------------------------------------
+# Books — searchable gallery of every Subject that has a full-book Drive link
+# ---------------------------------------------------------------------------
+def _collect_book_items(q):
+    subjects_qs = (
+        Subject.published.exclude(book_drive_link="")
+        .select_related("semester", "semester__program")
+    )
+    if q:
+        subjects_qs = subjects_qs.filter(name__icontains=q)
+
+    items = []
+    for s in subjects_qs:
+        program = s.semester.program
+        items.append({
+            "id": s.id,
+            "name": s.name,
+            "code": s.code,
+            "program": program.short_name,
+            "semester": s.semester.display_name,
+            "book_link": s.book_drive_link,
+            "sort_key": (program.short_name, s.semester.number, s.name),
+        })
+    items.sort(key=lambda x: x["sort_key"])
+    return items
+
+
+def book_browse(request):
+    q = request.GET.get("q", "").strip()
+    items = _collect_book_items(q)
+    paginator = Paginator(items, TOPIC_BROWSE_PAGE_SIZE)
+    page_obj = paginator.get_page(1)
+    context = {"page_obj": page_obj, "query": q, "page_title": "Books"}
+    return render(request, "academics/book_browse.html", context)
+
+
+def book_browse_partial(request):
+    q = request.GET.get("q", "").strip()
+    page_number = request.GET.get("page", 1)
+    items = _collect_book_items(q)
+    paginator = Paginator(items, TOPIC_BROWSE_PAGE_SIZE)
+    page_obj = paginator.get_page(page_number)
+    context = {"page_obj": page_obj, "query": q}
+    return render(request, "partials/book_grid_items.html", context)

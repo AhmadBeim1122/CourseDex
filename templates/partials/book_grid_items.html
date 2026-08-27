@@ -1,0 +1,20 @@
+{% for item in page_obj %}
+<button type="button" class="browse-topic-card book-card" data-drive-preview="{{ item.book_link }}" data-drive-title="{{ item.name }} — Full Book">
+  <span class="browse-kind-tag">📖 Book</span>
+  <h3>{{ item.name }}</h3>
+  <p class="browse-path">{{ item.program }} · {{ item.semester }}{% if item.code %} · {{ item.code }}{% endif %}</p>
+</button>
+{% empty %}
+<div class="empty-state">
+  <h3>No books found</h3>
+  <p>Try a different search{% if query %} — no results for “{{ query }}”{% endif %}.</p>
+</div>
+{% endfor %}
+
+{% if page_obj.has_next %}
+<div class="scroll-sentinel"
+     hx-get="{% url 'academics:book_browse_partial' %}?page={{ page_obj.next_page_number }}&q={{ query|urlencode }}"
+     hx-trigger="revealed" hx-swap="outerHTML">
+  <span class="loading-dots">Loading more books…</span>
+</div>
+{% endif %}

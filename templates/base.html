@@ -57,6 +57,7 @@
       
       <a href="{% url 'academics:program_list' %}" class="{% if mode == 'courses' or request.resolver_match.url_name in 'program_list,semester_list,subject_list,topic_list,topic_detail' %}is-active{% endif %}">Courses</a>
       <a href="{% url 'academics:topic_browse' %}" class="{% if request.resolver_match.url_name == 'topic_browse' %}is-active{% endif %}">Browse Topics</a>
+      <a href="{% url 'academics:book_browse' %}" class="{% if request.resolver_match.url_name == 'book_browse' %}is-active{% endif %}">Books</a>
       <a href="{% url 'academics:pastpaper_program_list' %}" class="{% if mode == 'pastpapers' %}is-active{% endif %}">Past Papers</a>
 
       <a href="{% url 'core:about' %}" class="{% if request.resolver_match.url_name == 'about' %}is-active{% endif %}">About</a>
@@ -150,6 +151,26 @@
       </div>
       <div class="modal-footer">
         <a href="#" id="keywordModalLink" class="btn btn-outline btn-sm">Open full page →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="drivePreviewModal" tabindex="-1" aria-labelledby="drivePreviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-drive-preview">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="drivePreviewModalLabel">Preview</h5>
+        <button type="button" class="modal-close-btn" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body" id="drivePreviewModalBody" style="padding:0;">
+        <div class="drive-preview-frame-wrap">
+          <iframe id="drivePreviewIframe" src="" loading="lazy" title="Document preview" allow="autoplay"></iframe>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" id="drivePreviewOpenLink" target="_blank" rel="noopener" class="btn btn-outline btn-sm">Open in Drive ↗</a>
       </div>
     </div>
   </div>
