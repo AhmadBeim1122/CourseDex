@@ -18,7 +18,7 @@ sitemaps = {
 }
 
 urlpatterns = [
-    path("admin-portal-site-4224/", admin.site.urls),
+    path("admins-portal-site-4224/", admin.site.urls),
     path("", include("apps.core.urls")),
     path("", include("apps.academics.urls")),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
