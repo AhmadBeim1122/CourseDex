@@ -10,6 +10,8 @@ from .ai_service import (
     PROVIDERS, generate_explanation, generate_solution, get_usage_summary,
     log_usage, ocr_extract_text_gemini, ocr_extract_text_tesseract,
 )
+from .youtube_service import suggest_videos_for_title
+
 from .keyword_linker import build_keyword_index, link_keywords_in_html
 from .models import PastPaper, Program, Semester, Subject, SubTopic, Topic
 
@@ -473,3 +475,61 @@ def ai_pastpaper_solve(request):
         return JsonResponse({"ok": True, "text": text})
     except Exception as e:
         return JsonResponse({"ok": False, "error": str(e)})
+
+
+@staff_member_required
+@require_POST
+def ai_fetch_topic_videos(request, topic_id):
+    topic = get_object_or_404(Topic, id=topic_id)
+    try:
+        suggestions = suggest_videos_for_title(topic.title)
+    except Exception as e:
+        return JsonResponse({"ok": False, "error": str(e)})
+
+    existing_urls = set(topic.videos.values_list("youtube_url", flat=True))
+    start_order = topic.videos.count()
+    added = 0
+    for s in suggestions:
+        url = f"https://www.youtube.com/watch?v={s['video_id']}"
+        if url in existing_urls:
+            continue
+        from .models import TopicVideo
+        TopicVideo.objects.create(
+            topic=topic,
+            youtube_url=url,
+            title=f"[{s['language']}] {s['title']}"[:200],
+            order=start_order + added + 1,
+        )
+        existing_urls.add(url)
+        added += 1
+
+    return JsonResponse({"ok": True, "added": added, "found": len(suggestions)})
+
+
+@staff_member_required
+@require_POST
+def ai_fetch_subtopic_videos(request, subtopic_id):
+    subtopic = get_object_or_404(SubTopic, id=subtopic_id)
+    try:
+        suggestions = suggest_videos_for_title(subtopic.title)
+    except Exception as e:
+        return JsonResponse({"ok": False, "error": str(e)})
+
+    existing_urls = set(subtopic.videos.values_list("youtube_url", flat=True))
+    start_order = subtopic.videos.count()
+    added = 0
+    for s in suggestions:
+        url = f"https://www.youtube.com/watch?v={s['video_id']}"
+        if url in existing_urls:
+            continue
+        from .models import SubTopicVideo
+        SubTopicVideo.objects.create(
+            subtopic=subtopic,
+            youtube_url=url,
+            title=f"[{s['language']}] {s['title']}"[:200],
+            order=start_order + added + 1,
+        )
+        existing_urls.add(url)
+        added += 1
+
+    return JsonResponse({"ok": True, "added": added, "found": len(suggestions)})    

@@ -19,6 +19,8 @@ from django import forms
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import path, reverse
 
+from django.contrib.admin import SimpleListFilter
+
 
 TOPIC_BOUNDARY_RE = re.compile(r'(?:^|(?<=[.,]\s))([A-Z][A-Za-z0-9 /\-]{2,70}):\s*')
 
@@ -288,6 +290,66 @@ class SubjectAdmin(admin.ModelAdmin):
 # ---------------------------------------------------------------------------
 # Topic
 # ---------------------------------------------------------------------------
+class TopicHasVideoFilter(SimpleListFilter):
+    title = "has video"
+    parameter_name = "has_video"
+
+    def lookups(self, request, model_admin):
+        return [("yes", "Yes"), ("no", "No")]
+
+    def queryset(self, request, queryset):
+        if self.value() == "yes":
+            return queryset.filter(videos__isnull=False).distinct()
+        if self.value() == "no":
+            return queryset.filter(videos__isnull=True)
+        return queryset
+
+
+class TopicHasImageFilter(SimpleListFilter):
+    title = "has image"
+    parameter_name = "has_image"
+
+    def lookups(self, request, model_admin):
+        return [("yes", "Yes"), ("no", "No")]
+
+    def queryset(self, request, queryset):
+        if self.value() == "yes":
+            return queryset.filter(images__isnull=False).distinct()
+        if self.value() == "no":
+            return queryset.filter(images__isnull=True)
+        return queryset
+
+
+class TopicHasDocumentFilter(SimpleListFilter):
+    title = "has document"
+    parameter_name = "has_document"
+
+    def lookups(self, request, model_admin):
+        return [("yes", "Yes"), ("no", "No")]
+
+    def queryset(self, request, queryset):
+        if self.value() == "yes":
+            return queryset.filter(documents__isnull=False).distinct()
+        if self.value() == "no":
+            return queryset.filter(documents__isnull=True)
+        return queryset
+
+
+class TopicHasSubtopicsFilter(SimpleListFilter):
+    title = "has subtopics"
+    parameter_name = "has_subtopics"
+
+    def lookups(self, request, model_admin):
+        return [("yes", "Yes"), ("no", "No")]
+
+    def queryset(self, request, queryset):
+        if self.value() == "yes":
+            return queryset.filter(subtopics__isnull=False).distinct()
+        if self.value() == "no":
+            return queryset.filter(subtopics__isnull=True)
+        return queryset
+
+    
 class TopicAdminForm(forms.ModelForm):
     class Meta:
         model = Topic
@@ -299,13 +361,22 @@ class TopicAdminForm(forms.ModelForm):
 class TopicAdmin(admin.ModelAdmin):
     form = TopicAdminForm
     list_display = ("title", "subject", "order", "subtopic_count_display", "has_video", "has_document", "image_count_display", "is_published")
-    list_filter = ("subject__semester__program", "subject")
+    list_filter = (
+        "subject__semester__program",
+        "subject__semester",
+        "subject",
+        "is_published",
+        TopicHasVideoFilter,
+        TopicHasImageFilter,
+        TopicHasDocumentFilter,
+        TopicHasSubtopicsFilter,
+    )
     search_fields = ("title", "content")
     prepopulated_fields = {"slug": ("title",)}
     inlines = [SubTopicInline, TopicVideoInline, TopicDocumentInline, TopicImageInline]
 
     class Media:
-        js = ("js/admin_ai_buttons.js",)
+        js = ("js/admin_ai_buttons.js", "js/admin_youtube_fetch.js")
         css = {"all": ("css/admin-overrides.css",)}
 
     @admin.display(description="Subtopics")
@@ -333,7 +404,51 @@ class TopicAdmin(admin.ModelAdmin):
 # ---------------------------------------------------------------------------
 # Sub-Topic
 # ---------------------------------------------------------------------------
+class SubTopicHasVideoFilter(SimpleListFilter):
+    title = "has video"
+    parameter_name = "has_video"
 
+    def lookups(self, request, model_admin):
+        return [("yes", "Yes"), ("no", "No")]
+
+    def queryset(self, request, queryset):
+        if self.value() == "yes":
+            return queryset.filter(videos__isnull=False).distinct()
+        if self.value() == "no":
+            return queryset.filter(videos__isnull=True)
+        return queryset
+
+
+class SubTopicHasImageFilter(SimpleListFilter):
+    title = "has image"
+    parameter_name = "has_image"
+
+    def lookups(self, request, model_admin):
+        return [("yes", "Yes"), ("no", "No")]
+
+    def queryset(self, request, queryset):
+        if self.value() == "yes":
+            return queryset.filter(images__isnull=False).distinct()
+        if self.value() == "no":
+            return queryset.filter(images__isnull=True)
+        return queryset
+
+
+class SubTopicHasDocumentFilter(SimpleListFilter):
+    title = "has document"
+    parameter_name = "has_document"
+
+    def lookups(self, request, model_admin):
+        return [("yes", "Yes"), ("no", "No")]
+
+    def queryset(self, request, queryset):
+        if self.value() == "yes":
+            return queryset.filter(documents__isnull=False).distinct()
+        if self.value() == "no":
+            return queryset.filter(documents__isnull=True)
+        return queryset
+
+    
 class SubTopicAdminForm(forms.ModelForm):
     class Meta:
         model = SubTopic
@@ -345,12 +460,20 @@ class SubTopicAdminForm(forms.ModelForm):
 class SubTopicAdmin(admin.ModelAdmin):
     form = SubTopicAdminForm
     list_display = ("title", "topic", "order", "video_count_display", "image_count_display", "document_count_display")
-    list_filter = ("topic__subject__semester__program",)
+    list_filter = (
+        "topic__subject__semester__program",
+        "topic__subject__semester",
+        "topic__subject",
+        "topic",
+        SubTopicHasVideoFilter,
+        SubTopicHasImageFilter,
+        SubTopicHasDocumentFilter,
+    )
     search_fields = ("title", "content")
     inlines = [SubTopicVideoInline, SubTopicImageInline, SubTopicDocumentInline]
 
     class Media:
-        js = ("js/admin_ai_buttons.js",)
+        js = ("js/admin_ai_buttons.js", "js/admin_youtube_fetch.js")
         css = {"all": ("css/admin-overrides.css",)}
 
     @admin.display(description="Videos")
@@ -379,7 +502,15 @@ class PastPaperAdminForm(forms.ModelForm):
 class PastPaperAdmin(admin.ModelAdmin):
     form = PastPaperAdminForm
     list_display = ("subject", "year", "exam_type", "solution_type", "paper_link", "is_published")
-    list_filter = ("subject__semester__program", "year", "exam_type", "solution_type")
+    list_filter = (
+        "subject__semester__program",
+        "subject__semester",
+        "subject",
+        "year",
+        "exam_type",
+        "solution_type",
+        "is_published",
+    )
     search_fields = ("subject__name",)
     fieldsets = (
         (None, {"fields": ("subject", "year", "exam_type", "is_published")}),

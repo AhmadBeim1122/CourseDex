@@ -39,9 +39,9 @@ ALLOWED_HOSTS = config(
     "DJANGO_ALLOWED_HOSTS", default="127.0.0.1,localhost", cast=Csv()
 )
 ALLOWED_HOSTS += [".vercel.app"]
-CSRF_TRUSTED_ORIGINS = config(
-    "DJANGO_CSRF_TRUSTED_ORIGINS", default="", cast=Csv()
-)
+# CSRF_TRUSTED_ORIGINS = config(
+#     "DJANGO_CSRF_TRUSTED_ORIGINS", default="", cast=Csv()
+# )
 
 # Vercel (and most serverless platforms) terminate HTTPS at the edge and
 # forward plain HTTP internally — without this, Django thinks every
@@ -77,6 +77,8 @@ GEMINI_MODEL = config("GEMINI_MODEL", default="gemini-flash-latest")
 
 OPENROUTER_API_KEY = config("OPENROUTER_API_KEY", default="")
 OPENROUTER_MODEL = config("OPENROUTER_MODEL", default="meta-llama/llama-3.1-8b-instruct:free")
+
+YOUTUBE_API_KEY = config("YOUTUBE_API_KEY", default="")
 
 # ---------------------------------------------------------------------------
 # Applications

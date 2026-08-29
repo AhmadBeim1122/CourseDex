@@ -64,4 +64,7 @@ urlpatterns = [
     path("staff-ai/topic/usage/", views.ai_topic_usage, name="ai_topic_usage"),
     path("staff-ai/pastpaper/ocr/", views.ai_pastpaper_ocr, name="ai_pastpaper_ocr"),
     path("staff-ai/pastpaper/solve/", views.ai_pastpaper_solve, name="ai_pastpaper_solve"),
+
+    path("staff-ai/topic/<int:topic_id>/fetch-videos/", views.ai_fetch_topic_videos, name="ai_fetch_topic_videos"),
+    path("staff-ai/subtopic/<int:subtopic_id>/fetch-videos/", views.ai_fetch_subtopic_videos, name="ai_fetch_subtopic_videos"),
 ]
