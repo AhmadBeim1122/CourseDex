@@ -5,9 +5,16 @@
 {% block content %}
 <section class="section">
   <div class="wrap">
-    <span class="eyebrow">Staff only</span>
-    <h1>Chat Inbox</h1>
-    <p>Conversations started by visitors through the site's chat widget.</p>
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Staff only</span>
+        <h1>Chat Inbox</h1>
+        <p>Conversations started by visitors through the site's chat widget.</p>
+      </div>
+      {% if request.user.is_authenticated and request.user.is_staff %}
+      <a href="{% url 'admin:index' %}" class="btn btn-outline btn-sm">⚙️ Admin Panel</a>
+      {% endif %}
+    </div>
 
     <div class="chat-admin-layout">
       <aside class="chat-admin-sidebar">

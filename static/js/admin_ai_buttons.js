@@ -1,4 +1,16 @@
 (function () {
+  function parseJsonSafe(response) {
+    return response.text().then(function (text) {
+      try {
+        return JSON.parse(text);
+      } catch (e) {
+        return {
+          ok: false,
+          error: 'Server returned a non-JSON response (HTTP ' + response.status + '): ' + text.slice(0, 300),
+        };
+      }
+    });
+  }
   function csrfToken() {
     var el = document.querySelector('input[name=csrfmiddlewaretoken]');
     return el ? el.value : '';
@@ -6,7 +18,7 @@
 
   function refreshUsage(wrap) {
     fetch('/admin/academics/topic/ai/usage/', { credentials: 'same-origin' })
-      .then(function (r) { return r.json(); })
+      .then(parseJsonSafe)
       .then(function (data) {
         var note = wrap.querySelector('.ai-usage-note');
         if (note) {
@@ -43,7 +55,7 @@
       headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': csrfToken() },
       body: 'provider=' + encodeURIComponent(provider) + '&title=' + encodeURIComponent(title),
     })
-      .then(function (r) { return r.json(); })
+      .then(parseJsonSafe)
       .then(function (data) { onDone(data); })
       .catch(function (err) { onDone({ ok: false, error: String(err) }); });
   }

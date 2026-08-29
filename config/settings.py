@@ -43,6 +43,12 @@ CSRF_TRUSTED_ORIGINS = config(
     "DJANGO_CSRF_TRUSTED_ORIGINS", default="", cast=Csv()
 )
 
+# Vercel (and most serverless platforms) terminate HTTPS at the edge and
+# forward plain HTTP internally — without this, Django thinks every
+# request is insecure, which breaks CSRF/secure cookies on POST requests.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST = True
+
 SITE_NAME = config("SITE_NAME", default="CourseDex")
 SITE_INITIALS = config("SITE_INITIALS", default="CX")
 SITE_DOMAIN = config("SITE_DOMAIN", default="127.0.0.1:8000")

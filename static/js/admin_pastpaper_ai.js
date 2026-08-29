@@ -1,4 +1,16 @@
 (function () {
+  function parseJsonSafe(response) {
+    return response.text().then(function (text) {
+      try {
+        return JSON.parse(text);
+      } catch (e) {
+        return {
+          ok: false,
+          error: 'Server returned a non-JSON response (HTTP ' + response.status + '): ' + text.slice(0, 300),
+        };
+      }
+    });
+  }
   function csrfToken() {
     var el = document.querySelector('input[name=csrfmiddlewaretoken]');
     return el ? el.value : '';
@@ -24,7 +36,7 @@
       headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': csrfToken() },
       body: params,
     })
-      .then(function (r) { return r.json(); })
+      .then(parseJsonSafe)
       .then(onDone)
       .catch(function (err) { onDone({ ok: false, error: String(err) }); });
   }
