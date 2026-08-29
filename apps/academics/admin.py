@@ -312,31 +312,7 @@ class TopicAdmin(admin.ModelAdmin):
     def subtopic_count_display(self, obj):
         return obj.subtopics.count()
 
-    def get_urls(self):
-        custom = [
-            path("ai/generate/", self.admin_site.admin_view(self.ai_generate_view), name="academics_ai_generate"),
-            path("ai/usage/", self.admin_site.admin_view(self.ai_usage_view), name="academics_ai_usage"),
-        ]
-        return custom + super().get_urls()
 
-    def ai_generate_view(self, request):
-        if request.method != "POST":
-            return JsonResponse({"ok": False, "error": "POST required"}, status=405)
-        provider = request.POST.get("provider")
-        title = request.POST.get("title", "").strip()
-        if not title:
-            return JsonResponse({"ok": False, "error": "Title is empty."})
-        if provider not in PROVIDERS:
-            return JsonResponse({"ok": False, "error": "Unknown provider."})
-        try:
-            text = generate_explanation(provider, title)
-            log_usage(provider)
-            return JsonResponse({"ok": True, "text": text})
-        except Exception as e:
-            return JsonResponse({"ok": False, "error": str(e)})
-
-    def ai_usage_view(self, request):
-        return JsonResponse({"summary": get_usage_summary()})
 
     fieldsets = (
         (None, {"fields": ("subject", "title", "slug", "order", "is_published")}),
@@ -423,45 +399,6 @@ class PastPaperAdmin(admin.ModelAdmin):
         if obj.paper_drive_link:
             return format_html('<a href="{}" target="_blank">Open ↗</a>', obj.paper_drive_link)
         return "-"
-
-    def get_urls(self):
-        custom = [
-            path("ai/ocr/", self.admin_site.admin_view(self.ai_ocr_view), name="academics_pastpaper_ocr"),
-            path("ai/solve/", self.admin_site.admin_view(self.ai_solve_view), name="academics_pastpaper_solve"),
-        ]
-        return custom + super().get_urls()
-
-    def ai_ocr_view(self, request):
-        if request.method != "POST":
-            return JsonResponse({"ok": False, "error": "POST required"}, status=405)
-        drive_link = request.POST.get("drive_link", "").strip()
-        method = request.POST.get("method", "gemini")
-        if not drive_link:
-            return JsonResponse({"ok": False, "error": "Paste the paper's Drive link first."})
-        try:
-            if method == "tesseract":
-                text = ocr_extract_text_tesseract(drive_link)
-            else:
-                text = ocr_extract_text_gemini(drive_link)
-            return JsonResponse({"ok": True, "text": text, "method": method})
-        except Exception as e:
-            return JsonResponse({"ok": False, "error": str(e)})
-
-    def ai_solve_view(self, request):
-        if request.method != "POST":
-            return JsonResponse({"ok": False, "error": "POST required"}, status=405)
-        provider = request.POST.get("provider")
-        paper_text = request.POST.get("paper_text", "").strip()
-        if not paper_text:
-            return JsonResponse({"ok": False, "error": "No extracted paper text to solve."})
-        if provider not in PROVIDERS:
-            return JsonResponse({"ok": False, "error": "Unknown provider."})
-        try:
-            text = generate_solution(provider, paper_text)
-            log_usage(provider)
-            return JsonResponse({"ok": True, "text": text})
-        except Exception as e:
-            return JsonResponse({"ok": False, "error": str(e)})
 
 
 

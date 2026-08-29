@@ -119,7 +119,7 @@
       confirmBtn.disabled = true;
       regenBtn.disabled = true;
       requestJSON(
-        '/admin/academics/pastpaper/ai/solve/',
+        '/staff-ai/pastpaper/solve/',
         'provider=' + encodeURIComponent(provider) + '&paper_text=' + encodeURIComponent(extractedText),
         renderState
       );
@@ -185,7 +185,7 @@
         btn.disabled = true;
         btn.textContent = '⏳ Solving…';
         requestJSON(
-          '/admin/academics/pastpaper/ai/solve/',
+          '/staff-ai/pastpaper/solve/',
           'provider=' + encodeURIComponent(p[0]) + '&paper_text=' + encodeURIComponent(currentExtracted),
           function (data) {
             btn.disabled = false;
@@ -205,7 +205,7 @@
       ocrBtnTesseract.disabled = true;
       btn.textContent = loadingLabel;
       requestJSON(
-        '/admin/academics/pastpaper/ai/ocr/',
+        '/staff-ai/pastpaper/ocr/',
         'drive_link=' + encodeURIComponent(link) + '&method=' + encodeURIComponent(method),
         function (data) {
           ocrBtnGemini.disabled = false;

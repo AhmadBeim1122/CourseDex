@@ -59,4 +59,9 @@ urlpatterns = [
     path("topics/partial/", views.topic_browse_partial, name="topic_browse_partial"),
     path("books/", views.book_browse, name="book_browse"),
     path("books/partial/", views.book_browse_partial, name="book_browse_partial"),
+
+    path("staff-ai/topic/generate/", views.ai_topic_generate, name="ai_topic_generate"),
+    path("staff-ai/topic/usage/", views.ai_topic_usage, name="ai_topic_usage"),
+    path("staff-ai/pastpaper/ocr/", views.ai_pastpaper_ocr, name="ai_pastpaper_ocr"),
+    path("staff-ai/pastpaper/solve/", views.ai_pastpaper_solve, name="ai_pastpaper_solve"),
 ]

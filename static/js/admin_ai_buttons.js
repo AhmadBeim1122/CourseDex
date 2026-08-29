@@ -17,7 +17,7 @@
   }
 
   function refreshUsage(wrap) {
-    fetch('/admin/academics/topic/ai/usage/', { credentials: 'same-origin' })
+    fetch('/staff-ai/topic/usage/', { credentials: 'same-origin' })
       .then(parseJsonSafe)
       .then(function (data) {
         var note = wrap.querySelector('.ai-usage-note');
@@ -49,7 +49,7 @@
   }
 
   function requestGeneration(provider, title, onDone) {
-    fetch('/admin/academics/topic/ai/generate/', {
+    fetch('/staff-ai/topic/generate/', {
       method: 'POST',
       credentials: 'same-origin',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': csrfToken() },

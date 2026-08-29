@@ -3,6 +3,13 @@ from django.db.models import Prefetch, Q
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, render
 
+from django.contrib.admin.views.decorators import staff_member_required
+from django.views.decorators.http import require_POST
+
+from .ai_service import (
+    PROVIDERS, generate_explanation, generate_solution, get_usage_summary,
+    log_usage, ocr_extract_text_gemini, ocr_extract_text_tesseract,
+)
 from .keyword_linker import build_keyword_index, link_keywords_in_html
 from .models import PastPaper, Program, Semester, Subject, SubTopic, Topic
 
@@ -399,3 +406,70 @@ def book_browse_partial(request):
     page_obj = paginator.get_page(page_number)
     context = {"page_obj": page_obj, "query": q}
     return render(request, "partials/book_grid_items.html", context)
+
+
+
+
+
+
+
+
+# ---------------------------------------------------------------------------
+# Staff-only AI endpoints — moved OUT of admin's nested get_urls() to a
+# plain top-level path, so they resolve reliably on any host (incl.
+# serverless platforms where nested admin URL routing can be flaky).
+# ---------------------------------------------------------------------------
+@staff_member_required
+@require_POST
+def ai_topic_generate(request):
+    provider = request.POST.get("provider")
+    title = request.POST.get("title", "").strip()
+    if not title:
+        return JsonResponse({"ok": False, "error": "Title is empty."})
+    if provider not in PROVIDERS:
+        return JsonResponse({"ok": False, "error": "Unknown provider."})
+    try:
+        text = generate_explanation(provider, title)
+        log_usage(provider)
+        return JsonResponse({"ok": True, "text": text})
+    except Exception as e:
+        return JsonResponse({"ok": False, "error": str(e)})
+
+
+@staff_member_required
+def ai_topic_usage(request):
+    return JsonResponse({"summary": get_usage_summary()})
+
+
+@staff_member_required
+@require_POST
+def ai_pastpaper_ocr(request):
+    drive_link = request.POST.get("drive_link", "").strip()
+    method = request.POST.get("method", "gemini")
+    if not drive_link:
+        return JsonResponse({"ok": False, "error": "Paste the paper's Drive link first."})
+    try:
+        if method == "tesseract":
+            text = ocr_extract_text_tesseract(drive_link)
+        else:
+            text = ocr_extract_text_gemini(drive_link)
+        return JsonResponse({"ok": True, "text": text, "method": method})
+    except Exception as e:
+        return JsonResponse({"ok": False, "error": str(e)})
+
+
+@staff_member_required
+@require_POST
+def ai_pastpaper_solve(request):
+    provider = request.POST.get("provider")
+    paper_text = request.POST.get("paper_text", "").strip()
+    if not paper_text:
+        return JsonResponse({"ok": False, "error": "No extracted paper text to solve."})
+    if provider not in PROVIDERS:
+        return JsonResponse({"ok": False, "error": "Unknown provider."})
+    try:
+        text = generate_solution(provider, paper_text)
+        log_usage(provider)
+        return JsonResponse({"ok": True, "text": text})
+    except Exception as e:
+        return JsonResponse({"ok": False, "error": str(e)})
