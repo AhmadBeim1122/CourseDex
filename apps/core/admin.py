@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import ChatMessage, ChatVisitor, ContactMessage, SiteSetting
+from .models import ChatMessage, ChatVisitor, ContactMessage, PageVisit, SiteSetting
 
 
 @admin.register(SiteSetting)
@@ -43,3 +43,15 @@ class ChatVisitorAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
+
+
+
+@admin.register(PageVisit)
+class PageVisitAdmin(admin.ModelAdmin):
+    list_display = ("title", "path", "visit_count", "last_visited", "first_visited")
+    search_fields = ("path", "title")
+    ordering = ("-visit_count",)
+    readonly_fields = ("path", "title", "visit_count", "last_visited", "first_visited")
+
+    def has_add_permission(self, request):
+        return False    

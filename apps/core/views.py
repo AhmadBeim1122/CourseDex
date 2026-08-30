@@ -13,6 +13,8 @@ from .models import ChatMessage, ChatVisitor
 
 
 def home(request):
+    from .analytics import log_visit
+    log_visit(request.path, "Home")
     programs = Program.published.all()[:8]
     stats = {
         "programs": Program.published.count(),

@@ -111,3 +111,23 @@ class ChatMessage(models.Model):
 
     def __str__(self):
         return f"{self.sender}: {self.message[:40]}"
+
+
+class PageVisit(models.Model):
+    """
+    A basic per-URL visit counter — no per-user tracking, just a running
+    count of how many times each page was loaded.
+    """
+    path = models.CharField(max_length=500, unique=True)
+    title = models.CharField(max_length=255, blank=True)
+    visit_count = models.PositiveIntegerField(default=0)
+    last_visited = models.DateTimeField(auto_now=True)
+    first_visited = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-visit_count"]
+        verbose_name = "Page Visit"
+        verbose_name_plural = "Page Visits"
+
+    def __str__(self):
+        return f"{self.title or self.path} — {self.visit_count} visits"    

@@ -12,6 +12,8 @@ from .ai_service import (
 )
 from .youtube_service import suggest_videos_for_title
 
+from apps.core.analytics import log_visit
+
 from .keyword_linker import build_keyword_index, link_keywords_in_html
 from .models import PastPaper, Program, Semester, Subject, SubTopic, Topic
 
@@ -41,6 +43,7 @@ def _get_subject(semester, subject_slug):
 #   /courses/<program>/<semester>/<subject>/<topic>/  -> topic detail
 # ---------------------------------------------------------------------------
 def program_list(request):
+    log_visit(request.path, "Courses — Programs")
     q = request.GET.get("q", "").strip()
     programs = Program.published.all()
     if q:
@@ -107,6 +110,7 @@ def topic_detail(request, program_slug, semester_number, subject_slug, topic_slu
     topic = get_object_or_404(
         Topic.published, subject=subject, slug=topic_slug
     )
+    log_visit(request.path, f"Topic: {topic.title}")
     topics = list(subject.topics.filter(is_published=True))
     ids = [t.id for t in topics]
     idx = ids.index(topic.id) if topic.id in ids else -1
@@ -133,6 +137,7 @@ def subtopic_detail(request, program_slug, semester_number, subject_slug, topic_
     subject = _get_subject(semester, subject_slug)
     topic = get_object_or_404(Topic.published, subject=subject, slug=topic_slug)
     subtopic = get_object_or_404(SubTopic, topic=topic, slug=subtopic_slug)
+    log_visit(request.path, f"Subtopic: {subtopic.title}")
 
     siblings = list(topic.subtopics.all())
     ids = [s.id for s in siblings]
@@ -236,6 +241,7 @@ def pastpaper_detail(request, program_slug, semester_number, subject_slug, year)
     papers = list(PastPaper.published.filter(subject=subject, year=year))
     if not papers:
         raise Http404("No past papers found for this year.")
+    log_visit(request.path, f"Past Paper: {subject.name} — {year}")
 
     keyword_index = build_keyword_index(subject)
     for paper in papers:
@@ -392,6 +398,7 @@ def _collect_book_items(q):
 
 
 def book_browse(request):
+    log_visit(request.path, "Books")
     q = request.GET.get("q", "").strip()
     items = _collect_book_items(q)
     paginator = Paginator(items, TOPIC_BROWSE_PAGE_SIZE)
