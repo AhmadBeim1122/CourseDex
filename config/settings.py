@@ -39,9 +39,9 @@ ALLOWED_HOSTS = config(
     "DJANGO_ALLOWED_HOSTS", default="127.0.0.1,localhost", cast=Csv()
 )
 ALLOWED_HOSTS += [".vercel.app"]
-# CSRF_TRUSTED_ORIGINS = config(
-#     "DJANGO_CSRF_TRUSTED_ORIGINS", default="", cast=Csv()
-# )
+CSRF_TRUSTED_ORIGINS = config(
+    "DJANGO_CSRF_TRUSTED_ORIGINS", default="", cast=Csv()
+)
 
 # Vercel (and most serverless platforms) terminate HTTPS at the edge and
 # forward plain HTTP internally — without this, Django thinks every

@@ -21,12 +21,14 @@ PROVIDERS = {
 
 PROMPT_TEMPLATE = (
     "You are writing study notes for a university student. Write a clear, "
-    "well-structured explanation (150-300 words) of the following topic. "
-    "Format the answer as clean HTML using ONLY these tags where useful: "
-    "<p>, <h3>, <strong>, <em>, <blockquote>, <ul>, <li>, <ol>, <dl>, <dt>, "
-    "<dd> (use <dl>/<dt>/<dd> for any key term + definition pairs). Do not "
-    "include <html>, <head>, <body>, markdown syntax, or code fences — "
-    "return just the HTML fragment itself. Topic: \"{title}\"."
+    "well-structured explanation of the following topic, using approximately "
+    "{word_count} words (stay close to this target — do not go far under "
+    "or over it). Format the answer as clean HTML using ONLY these tags "
+    "where useful: <p>, <h3>, <strong>, <em>, <blockquote>, <ul>, <li>, "
+    "<ol>, <dl>, <dt>, <dd> (use <dl>/<dt>/<dd> for any key term + "
+    "definition pairs). Do not include <html>, <head>, <body>, markdown "
+    "syntax, or code fences — return just the HTML fragment itself. "
+    "Topic: \"{title}\"."
 )
 
 SOLUTION_PROMPT_TEMPLATE = (
@@ -36,9 +38,9 @@ SOLUTION_PROMPT_TEMPLATE = (
     "Go through EVERY question in order. Judge each question's expected "
     "length from its marks/instructions/phrasing:\n"
     "- Short questions (define, MCQ, fill-in-the-blank, 'briefly', low marks): "
-    "give a concise, focused answer (2-6 sentences).\n"
+    "give a concise, focused answer (5-8 sentences).\n"
     "- Long questions ('explain in detail', 'discuss', 'describe', high marks): "
-    "give a thorough, well-organized answer with sub-points where useful.\n\n"
+    "give a thorough, well-organized answer with sub-points where useful in long detail.\n\n"
     "Format the ENTIRE response as clean HTML using ONLY these tags: <h3> "
     "(for each question number/heading), <p>, <strong>, <em>, <blockquote>, "
     "<ul>, <li>, <ol>, <dl>, <dt>, <dd>. Do not include <html>, <head>, "
@@ -312,8 +314,10 @@ def _run_provider(provider, prompt):
     raise RuntimeError(f"All {len(models)} fallback model(s) failed for {provider}:\n{joined}"[:800])
 
 
-def generate_explanation(provider, title):
-    return _run_provider(provider, PROMPT_TEMPLATE.format(title=title))
+def generate_explanation(provider, title, word_count=300):
+    return _run_provider(
+        provider, PROMPT_TEMPLATE.format(title=title, word_count=word_count)
+    )
 
 
 def generate_solution(provider, paper_text):

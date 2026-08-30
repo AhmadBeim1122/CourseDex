@@ -421,17 +421,27 @@ def book_browse_partial(request):
 # plain top-level path, so they resolve reliably on any host (incl.
 # serverless platforms where nested admin URL routing can be flaky).
 # ---------------------------------------------------------------------------
+ALLOWED_WORD_COUNTS = {500, 1000, 2000, 3000}
+
+
 @staff_member_required
 @require_POST
 def ai_topic_generate(request):
     provider = request.POST.get("provider")
     title = request.POST.get("title", "").strip()
+    try:
+        word_count = int(request.POST.get("word_count", 300))
+    except (TypeError, ValueError):
+        word_count = 300
+    if word_count not in ALLOWED_WORD_COUNTS:
+        word_count = 300
+
     if not title:
         return JsonResponse({"ok": False, "error": "Title is empty."})
     if provider not in PROVIDERS:
         return JsonResponse({"ok": False, "error": "Unknown provider."})
     try:
-        text = generate_explanation(provider, title)
+        text = generate_explanation(provider, title, word_count=word_count)
         log_usage(provider)
         return JsonResponse({"ok": True, "text": text})
     except Exception as e:

@@ -48,19 +48,19 @@
     document.getElementById('closeAlertBtn').onclick = function () { modal.remove(); };
   }
 
-  function requestGeneration(provider, title, onDone) {
+  function requestGeneration(provider, title, wordCount, onDone) {
     fetch('/staff-ai/topic/generate/', {
       method: 'POST',
       credentials: 'same-origin',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': csrfToken() },
-      body: 'provider=' + encodeURIComponent(provider) + '&title=' + encodeURIComponent(title),
+      body: 'provider=' + encodeURIComponent(provider) + '&title=' + encodeURIComponent(title) + '&word_count=' + encodeURIComponent(wordCount),
     })
       .then(parseJsonSafe)
       .then(function (data) { onDone(data); })
       .catch(function (err) { onDone({ ok: false, error: String(err) }); });
   }
 
-  function showGenerationPopup(provider, title, initialData, contentField, wrap) {
+  function showGenerationPopup(provider, title, wordCount, initialData, contentField, wrap) {
     var overlay = document.createElement('div');
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:99999;padding:20px;';
 
@@ -136,7 +136,7 @@
       body.textContent = '⏳ Regenerating…';
       confirmBtn.disabled = true;
       regenBtn.disabled = true;
-      requestGeneration(provider, title, function (data) {
+      requestGeneration(provider, title, wordCount, function (data) {
         renderState(data);
       });
     });
@@ -146,16 +146,16 @@
     });
   }
 
-  function runGenerate(provider, titleField, contentField, btn, wrap) {
+  function runGenerate(provider, titleField, contentField, btn, wrap, wordCount) {
     var title = (titleField.value || '').trim();
     if (!title) { showCopyAlert('Pehle Title field fill karein.'); return; }
     var original = btn.textContent;
     btn.disabled = true;
     btn.textContent = '⏳ Generating…';
-    requestGeneration(provider, title, function (data) {
+    requestGeneration(provider, title, wordCount, function (data) {
       btn.disabled = false;
       btn.textContent = original;
-      showGenerationPopup(provider, title, data, contentField, wrap);
+      showGenerationPopup(provider, title, wordCount, data, contentField, wrap);
     });
   }
 
@@ -166,13 +166,28 @@
     var wrap = document.createElement('div');
     wrap.className = 'ai-btn-group';
 
-        [['groq', 'API 1'], ['gemini', 'API 2'], ['openrouter', 'API 3'], ['ollama', 'API 4']].forEach(function (p) {
+    var wordSelect = document.createElement('select');
+    wordSelect.className = 'ai-word-select';
+    [
+      ['500', 'Under 500 words'],
+      ['1000', 'Under 1000 words'],
+      ['2000', 'Under 2000 words'],
+      ['3000', 'Under 3000 words'],
+    ].forEach(function (opt) {
+      var option = document.createElement('option');
+      option.value = opt[0];
+      option.textContent = opt[1];
+      wordSelect.appendChild(option);
+    });
+    wrap.appendChild(wordSelect);
+
+    [['groq', 'API 1'], ['gemini', 'API 2'], ['openrouter', 'API 3'], ['ollama', 'API 4']].forEach(function (p) {
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'ai-btn';
       btn.textContent = '🤖 ' + p[1] + ' — Get Data';
       btn.addEventListener('click', function () {
-        runGenerate(p[0], titleField, contentField, btn, wrap);
+        runGenerate(p[0], titleField, contentField, btn, wrap, wordSelect.value);
       });
       wrap.appendChild(btn);
     });

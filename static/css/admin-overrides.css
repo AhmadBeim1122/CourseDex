@@ -65,3 +65,19 @@
 }
 .ocr-extracted-label { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #9aa0ab; margin-bottom: 6px; }
 .ocr-extracted-text { white-space: pre-wrap; font-size: 13px; line-height: 1.5; color: #e6e8ec; max-height: 220px; overflow-y: auto; }
+
+.ai-word-select {
+  font-size: 12px; padding: 5px 8px; border-radius: 5px; border: 1px solid #0F766E;
+  background: #fff; color: #0F766E; font-weight: 600; margin-right: 6px;
+}
+[data-bs-theme="dark"] .ai-word-select { background: #14171c; color: #cfd3db; border-color: #383d47; }
+.ai-btn-inline { margin-top: 4px; font-size: 11px; padding: 3px 8px; }.ai-btn-inline { margin-top: 4px; font-size: 11px; padding: 3px 8px; }
+.bottom-object-tools {
+  float: none !important;
+  display: flex !important;
+  gap: 10px;
+  margin: 14px 0 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+.bottom-object-tools li { display: inline-block; }
