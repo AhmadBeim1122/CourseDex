@@ -80,4 +80,52 @@
   padding: 0 !important;
   list-style: none !important;
 }
-.bottom-object-tools li { display: inline-block; }
+.bottom-object-tools li { display: inline-block; }/* ---------- Move the change-form actions sidebar (Save/Delete/History/
+   View on site) to the bottom on desktop too — matches what already
+   happens naturally on mobile/tablet via Bootstrap's grid stacking. ---------- */
+@media (min-width: 992px) {
+  .col-lg-9:has(+ .col-lg-3 #jazzy-actions) {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+
+  .col-lg-3:has(#jazzy-actions) {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    margin-top: 20px;
+  }
+}
+
+/* One continuous row: Save / Save and add another / Save and continue /
+   Delete / Import.../ History / View on site all flow left-to-right,
+   wrapping to a new line only when space runs out. */
+#jazzy-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  border-top: 1px solid #dee2e6;
+  padding-top: 16px;
+}
+
+/* Unwrap every intermediate grouping element (the button div, the
+   object-tools div, and any stray <li> inside it) so their contents
+   become direct flex items of #jazzy-actions. Bootstrap's own .d-flex
+   utility uses !important, so ours must too, to win. */
+#jazzy-actions > div,
+#jazzy-actions .object-tools,
+#jazzy-actions li {
+  display: contents !important;
+  list-style: none;
+}
+
+#jazzy-actions input[type="submit"],
+#jazzy-actions a.btn {
+  width: auto !important;
+  flex: 0 0 auto;
+  margin: 0 !important;
+}
+
+[data-bs-theme="dark"] #jazzy-actions {
+  border-top-color: #383d47;
+}
