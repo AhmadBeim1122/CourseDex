@@ -182,6 +182,7 @@ class PastPaperInline(admin.TabularInline):
 # ---------------------------------------------------------------------------
 @admin.register(Program)
 class ProgramAdmin(admin.ModelAdmin):
+    list_per_page = 10
     list_display = ("short_name", "name", "total_semesters", "subject_count_display", "is_published", "order")
     list_editable = ("order", "is_published")
     search_fields = ("name", "short_name")
@@ -210,6 +211,7 @@ class ProgramAdmin(admin.ModelAdmin):
 # ---------------------------------------------------------------------------
 @admin.register(Semester)
 class SemesterAdmin(admin.ModelAdmin):
+    list_per_page = 10
     list_display = ("__str__", "program", "number", "subject_count_display", "is_published")
     list_filter = ("program",)
     inlines = [SubjectInline]
@@ -224,6 +226,7 @@ class SemesterAdmin(admin.ModelAdmin):
 # ---------------------------------------------------------------------------
 @admin.register(Subject)
 class SubjectAdmin(admin.ModelAdmin):
+    list_per_page = 10
     list_display = ("name", "code", "semester", "topic_count_display", "past_paper_count_display", "is_published")
     list_filter = ("semester__program", "semester")
     search_fields = ("name", "code")
@@ -360,6 +363,7 @@ class TopicAdminForm(forms.ModelForm):
 @admin.register(Topic)
 class TopicAdmin(admin.ModelAdmin):
     form = TopicAdminForm
+    list_per_page = 10
     list_display = ("title", "subject", "order", "subtopic_count_display", "has_video", "has_document", "image_count_display", "is_published")
     list_filter = (
         "subject__semester__program",
@@ -459,6 +463,7 @@ class SubTopicAdminForm(forms.ModelForm):
 @admin.register(SubTopic)
 class SubTopicAdmin(admin.ModelAdmin):
     form = SubTopicAdminForm
+    list_per_page = 10
     list_display = ("title", "topic", "order", "video_count_display", "image_count_display", "document_count_display")
     list_filter = (
         "topic__subject__semester__program",
@@ -500,6 +505,7 @@ class PastPaperAdminForm(forms.ModelForm):
 
 @admin.register(PastPaper)
 class PastPaperAdmin(admin.ModelAdmin):
+    list_per_page = 10
     form = PastPaperAdminForm
     list_display = ("subject", "year", "exam_type", "solution_type", "paper_link", "is_published")
     list_filter = (
@@ -542,6 +548,7 @@ from .models import AIProviderUsage
 
 @admin.register(AIProviderUsage)
 class AIProviderUsageAdmin(admin.ModelAdmin):
+    list_per_page = 10
     list_display = ("provider", "date", "count")
     list_filter = ("provider", "date")
     ordering = ("-date",)
